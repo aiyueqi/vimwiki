@@ -1,0 +1,31 @@
+= [[aiyuezhu]] =
+
+
+[[周记]]
+
+
+[[http://www.baidu.com|baidu]]
+
+`a = 123`
+
+{{{python
+import hahah
+ab = 123
+}}}
+
+= 数学公式 =
+    * 用  x^(i)^ + y_(2)_ 
+    * \(x^i + y_2 \)
+== test math1 ==
+ {{$%align%
+ \sum_i a_i^2 &= 1 + 1 \\
+ &= 2.
+ }}$
+
+
+| sadf | klj  | klj  | lkj  | klj |
+|------|------|------|------|-----|
+| klj  | klj  |      |      |     |
+|      |      | klj  |      |     |
+|      | jkkk | kjlk |      |     |
+|      |      | klj  | ljkj |     |

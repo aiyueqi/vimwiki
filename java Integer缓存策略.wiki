@@ -1,0 +1,35 @@
+= java Integer缓存策略 =
+java自动装箱时，会将-128~127的整形放到一个缓存数组里面，（范围可变，可配置，也依赖jdk版本），当赋值时，会先检查改数字范围是否在缓存数组里，如果在直接将该Integer对象指向缓存数组中的引用。
+== 用来判断对象的引用值是否相等, 或比较primitive类型的值
+equals() 判断对象的值是否相等
+https://javapapers.com/java/java-integer-cache/
+{{{java
+public class JavaIntegerCache {
+	public static void main(String... strings) {
+
+		Integer integer1 = 3;
+		Integer integer2 = 3;
+
+		if (integer1 == integer2)
+			System.out.println("integer1 == integer2");
+		else
+			System.out.println("integer1 != integer2");
+
+		Integer integer3 = 300;
+		Integer integer4 = 300;
+		
+		if (integer3 == integer4)
+			System.out.println("integer3 == integer4");
+		else
+			System.out.println("integer3 != integer4");
+				
+	}
+}
+}}}
+output
+{{{
+integer1 == integer2
+integer3 != integer4
+}}}
+
+缓存策略与synchronize https://blog.csdn.net/dlf123321/article/details/53515756

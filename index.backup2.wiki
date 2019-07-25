@@ -1,0 +1,36 @@
+= [[清凉一夏上线整理]] =
+
+
+= 一级标题 =
+== 二级标题  ==
+  === 居中标题 === 
+
+*粗体* _斜体_ ~~删除线~~  `[[代码]]`
+
+^上^标   ,,下,,标
+
+WikiItem 大写开头的驼峰英文会被当成一个维基词条,并添加链接
+[[Wiki Item]] 手动建立wiki词条
+[[wiki item | description]] 输出HTML时显示description，链接到wiki item
+http://ktmud.com/  外部URL会被自动转换成链接
+[http://ktmud.com Ktmud]  带文字的外链
+
+
+* 无序列表 条目一
+* 无序列表 条目二 
+  - 子列表 条目一
+  - 自列表 条目二
+
+# 有序列表 条目一
+# 有序列表 条目二
+
+=== 教程链接 ===
+https://blog.csdn.net/yhm07/article/details/41788289
+https://github.com/vimwiki/vimwiki#basic-markup
+
+=== 快捷键 ===
+<leader>ww 在当前窗口打开维基首页
+<leader>wt 在新tab打开维基首页
+<leader>w<leader>w 打开/新建当天日记
+<leader>w<keader>t 在新tab打开/新建当天日记
+<leader>ws 选择维基项目（详见下面的“多个维基项目”一节）
