@@ -1,4 +1,4 @@
-[[Collection]]
-[[内部类]]
-
-[[java Integer缓存策略]]
+== [[Collection]] ==
+== [[内部类]] ==
+== [[lambda表达式]] ==
+== [[java Integer缓存策略]] ==

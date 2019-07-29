@@ -1,1 +1,2 @@
-[[volatile特性]]
+== [[java内存模型]] ==
+== [[volatile特性]] ==

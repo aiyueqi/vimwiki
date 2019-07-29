@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>session与token</title>
+    <link rel="Stylesheet" type="text/css" href="./css/style.css" />
+    <link rel="stylesheet" type="text/css" href="./google-code-prettify/prettify.css" >
+    <!-- add more style sheets and javascripts -->
+</head>
+<body>
+<!--<body onload="prettyPrint()">-->
+
+<div class="content">
+
+<div id="session与token"><h1 id="session与token" class="header"><a href="#session与token">session与token</a></h1></div>
+<p>
+HTTP是无状态协议，为了存储用户登录信息，需要用到session和token技术
+</p>
+
+<div id="session与token-session and cookie"><h2 id="session and cookie" class="header"><a href="#session与token-session and cookie">session and cookie</a></h2></div>
+<p>
+session即会话，服务端为了区分不同的客户端而生成的身份标识。
+服务器使用session把用户的信息临时保存在了服务器上, 客户端使用cookie来存储这个身份标识。
+</p>
+
+<p>
+客户端第一次向服务端发起请求时，服务端会生成session并存储下来，客户端接到服务端返回的请求时，便将session set到header的cookie中。当客户端再次像服务端发送请求时，头部会带上刚刚set过的cookie，用来标志身份
+</p>
+
+<div id="session与token-session的不足"><h2 id="session的不足" class="header"><a href="#session与token-session的不足">session的不足</a></h2></div>
+<p>
+session 存储在某一台服务器上，而对于分布式系统，因为反向代理和负载均衡的存在，请求可能会打到其他的实例上，那么session会丢失。
+</p>
+
+<div id="session与token-token"><h2 id="token" class="header"><a href="#session与token-token">token</a></h2></div>
+<p>
+客户端第一次向服务端发起请求时，服务端使用一些算法对密钥和数据做一个签名生成token，不存储token，返回给客户端。客户端会将token存储下来，再次请求时，服务端会再次计算生成签名与客户端传来的token是否一致，一致则校验通过。
+</p>
+
+<p>
+使用token避免了分布式多台实例无法存储session的问题
+</p>
+
+</div>
+
+<hr class="comment">
+<section class="comment">
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'lotaboutvimwiki'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+   
+</section>
+
+    <script src="./js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $('pre').addClass('prettyprint linenums') 
+        prettyPrint()})
+    </script>
+    <script src="./google-code-prettify/prettify.js"></script>
+
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

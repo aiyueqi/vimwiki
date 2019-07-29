@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>周记</title>
+    <title>lambda表达式</title>
     <link rel="Stylesheet" type="text/css" href="./css/style.css" />
     <link rel="stylesheet" type="text/css" href="./google-code-prettify/prettify.css" >
     <!-- add more style sheets and javascripts -->
@@ -12,24 +12,49 @@
 
 <div class="content">
 
-
-<div id="第三周"><h2 id="第三周" class="header"><a href="#第三周">第三周</a></h2></div>
-<ul>
+<ol>
 <li>
-周一
+java lambda表达式
 
-<ul>
-<li>
-create <a href="dog.html">dog</a>
+</ol>
+<p>
+[Java 8 Lambda Expressions Tutorial. Lambda Expression Java](<a href="https://viralpatel.net/blogs/Lambda-expressions-java-tutorial/)">https://viralpatel.net/blogs/Lambda-expressions-java-tutorial/)</a>
+@functionalInterface with default method
+[java - Can @FunctionalInterfaces have default methods? - Stack Overflow](<a href="https://stackoverflow.com/questions/30165060/can-functionalinterfaces-have-default-methods)">https://stackoverflow.com/questions/30165060/can-functionalinterfaces-have-default-methods)</a>
+how Java compiles the lambda expressions into bytecode.
+ [<a href="https://blog.overops.com/compiling-lambda-expressions-scala-vs-java-8/](https://blog.overops.com/compiling-lambda-expressions-scala-vs-java-8/)">https://blog.overops.com/compiling-lambda-expressions-scala-vs-java-8/](https://blog.overops.com/compiling-lambda-expressions-scala-vs-java-8/)</a> 
+</p>
 
-<li>
-create <a href="clever bear.html">clever bear</a>
+<pre java>
+//define a functional interface
+@FunctionalInterface
+public interface WorkerInterface {
 
-</ul>
-<li>
-周二
+	public void doSomeWork();
 
-</ul>
+}
+
+public class WorkerInterfaceTest {
+
+	public static void execute(WorkerInterface worker) {
+		worker.doSomeWork();
+	}
+
+	public static void main(String [] args) {
+
+		//invoke doSomeWork using Annonymous class
+		execute(new WorkerInterface() {
+			@Override
+			public void doSomeWork() {
+				System.out.println("Worker invoked using Anonymous class");
+			}
+		});
+	
+		//invoke doSomeWork using Lambda expression	
+		execute( () -&gt; System.out.println("Worker invoked using Lambda expression") );
+	}
+}
+</pre>
 
 </div>
 

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>周记</title>
+    <title>spring事务</title>
     <link rel="Stylesheet" type="text/css" href="./css/style.css" />
     <link rel="stylesheet" type="text/css" href="./google-code-prettify/prettify.css" >
     <!-- add more style sheets and javascripts -->
@@ -12,24 +12,26 @@
 
 <div class="content">
 
+<div id="spring 事务"><h1 id="spring 事务" class="header"><a href="#spring 事务">spring 事务</a></h1></div>
+<p>
+通过aop生成动态代理类
+@Transactional注解 基于类层面，只要该类有一个方法加了此注解，整个类会被代理
+</p>
 
-<div id="第三周"><h2 id="第三周" class="header"><a href="#第三周">第三周</a></h2></div>
-<ul>
-<li>
-周一
+<p>
+动态代理类调到POJO类之后，类内部的调用不会再经过动态代理，因此事务注解会失效。
+</p>
 
-<ul>
-<li>
-create <a href="dog.html">dog</a>
+<p>
+所以，即使内部的类声明成public，或是实现接口，只要是内部调用，事务就不会生效
+</p>
 
-<li>
-create <a href="clever bear.html">clever bear</a>
-
-</ul>
-<li>
-周二
-
-</ul>
+<p>
+动态代理有两种方式：
+	1.jdk：针对接口的 只要类实现了某个接口，运行时使用此动态代理方法
+	2.cglib：针对类的 类未实现接口时调用，也是代理整个类
+	3.如果某个类实现了接口，但在某个未实现接口的public方法上加了 @Transactional注解，运行时会报错，可能是不知道该用哪个动态代理了-.-
+</p>
 
 </div>
 
