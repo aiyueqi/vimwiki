@@ -1,0 +1,3 @@
+docker解决打包问题，相当于一个进程将jdk，tomcat等环境打包到一个容器中，屏蔽底层差异
+
+kubernates 调度docker打好的包，解决负载均衡，高可用的问题
