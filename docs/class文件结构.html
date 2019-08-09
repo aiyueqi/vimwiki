@@ -46,7 +46,7 @@ class文件的开头4个字节，用来确定文件是否能被虚拟机接受�
 
 <p>
 常量池中的每一项常量都是一个表，共有11种结构各不相同的表结构数据，表开始的第一位都是一个u1类型的标志位tag，代表这个常量属于哪种常量类型。
-<img src="images/jvm1.png" />
+<img src="../wiki/html/images/jvm1.png" />
 </p>
 
 <p>
@@ -125,7 +125,7 @@ access_flags:
 
 <p>
 字段表的最终格式：
-<img src="images/jvm2.png" />
+<img src="../wiki/html/images/jvm2.png" />
 其中：
 </p>
 <ul>
@@ -152,7 +152,7 @@ descriptor_index 代表字段和方法的描述符，也是对常量池的引用
 
 </ul>
 <p>
-<img src="images/jvm3.png" />
+<img src="../wiki/html/images/jvm3.png" />
 </p>
 <ul>
 <li>
@@ -193,12 +193,12 @@ Class文件存储格式对方法的描述与对字段的描述几乎完全一致
 属性表attribute_info，与Class文件中其他的数据项目要求严格的顺序，长度和内容不同，属性表集合的限制较宽松，不再要求各个属性表有严格的顺序。
 只要不与已有的属性名重复，任何人实现的编译器都可以向属性表中写入自己定义的属性信息。
 java虚拟机运行时会忽略掉它不认识的属性，以下为9项虚拟机实现应当能识别的属性
-<img src="images/jvm4.png" />
+<img src="../wiki/html/images/jvm4.png" />
 </p>
 
 <p>
 Code属性表的结构
-<img src="images/jvm5.png" />
+<img src="../wiki/html/images/jvm5.png" />
 </p>
 
 </div>
