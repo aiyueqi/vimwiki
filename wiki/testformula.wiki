@@ -1,5 +1,20 @@
-{{$
-\sum_i a_i^2
-=
-1
-}}
+inline
+$ \sum_i a_i^2 = 1 $
+
+block
+ {{$
+ \sum_i a_i^2
+ =
+ 1
+ }}$
+ 
+ latex
+  {{$%align%
+ \sum_i a_i^2 &= 1 + 1 \\
+ &= 2.
+ }}$
+ 
+ inline
+$ x = {-b \pm \sqrt{b^2-4ac} \over 2a}. $
+
+

@@ -46,7 +46,12 @@ class文件的开头4个字节，用来确定文件是否能被虚拟机接受�
 
 <p>
 常量池中的每一项常量都是一个表，共有11种结构各不相同的表结构数据，表开始的第一位都是一个u1类型的标志位tag，代表这个常量属于哪种常量类型。
-<img src="../wiki/html/images/jvm1.png" />
+<img src="../wiki/images/jvm1.png" />
+</p>
+
+<p>
+其中tag是标志位,length值说明这个utf-8编码的字符串长度是多少字节，后面紧跟的长度为length字节的连续数据是一个使用utf-8略缩编码表示的字符串
+Class文件中方法、字段等都需要引用CONSTANT_Utf8_info型常量来描述名称
 </p>
 
 <p>
@@ -125,7 +130,7 @@ access_flags:
 
 <p>
 字段表的最终格式：
-<img src="../wiki/html/images/jvm2.png" />
+<img src="../wiki/images/jvm2.png" />
 其中：
 </p>
 <ul>
@@ -152,7 +157,7 @@ descriptor_index 代表字段和方法的描述符，也是对常量池的引用
 
 </ul>
 <p>
-<img src="../wiki/html/images/jvm3.png" />
+<img src="images/jvm3.png" />
 </p>
 <ul>
 <li>
@@ -160,9 +165,6 @@ descriptor_index 代表字段和方法的描述符，也是对常量池的引用
  eg.java.lang.String[][] -&gt; [[Ljava/lang/String;
  eg.int[] -&gt; [I
 
-</ul>
- 
-<ul>
 <li>
 参数列表按照参数的严格顺序放在一组小括号()之内 
 
@@ -193,13 +195,50 @@ Class文件存储格式对方法的描述与对字段的描述几乎完全一致
 属性表attribute_info，与Class文件中其他的数据项目要求严格的顺序，长度和内容不同，属性表集合的限制较宽松，不再要求各个属性表有严格的顺序。
 只要不与已有的属性名重复，任何人实现的编译器都可以向属性表中写入自己定义的属性信息。
 java虚拟机运行时会忽略掉它不认识的属性，以下为9项虚拟机实现应当能识别的属性
-<img src="../wiki/html/images/jvm4.png" />
+<img src="../wiki/images/jvm4.png" />
 </p>
 
 <p>
-Code属性表的结构
-<img src="../wiki/html/images/jvm5.png" />
+java程序方法体里面的代码经过javac编译器处理后，最终变为字节码指令存储在Code属性内，Code属性在方法表中使用。并非所有的方法表都必须存在这个属性，如接口或抽象类中的方法就不存在Code属性。
 </p>
+
+<div id="class文件结构-属性表集合-Code属性表的结构"><h3 id="Code属性表的结构" class="header"><a href="#class文件结构-属性表集合-Code属性表的结构">Code属性表的结构</a></h3></div>
+<p>
+<img src="../wiki/images/jvm5.png" />
+</p>
+
+<p>
+其中:
+</p>
+<ul>
+<li>
+attribute_name_index 是一项指向CONSTANT_Utf8_info型常量的索引，常量值固定为"Code", 它代表了该属性的属性名称
+
+<li>
+attribut_length 指示了属性值的长度
+
+<li>
+max_stack 代表了操作数栈深度的最大值，在方法执行的任意时刻，操作数栈都不会超过这个深度。虚拟机运行的时候需要根据这个值来分配栈帧frame中的操作栈深度
+
+<li>
+max_locals 代表了局部变量表所需的存储空间，单位是Slot，即虚拟机为局部变量分配内存所使用的最小单位
+
+<li>
+code_length 和 code 用来存储java源程序编译后生成的字节码指令 code_length代码字节码长度，code存储字节码指令的一系列字节流，每个字节码指令是一个u1类型的单字节，当虚拟机读取到code中的一个字节码时，找出对应的指令，并且可以知道这条指令后面是否需要跟随参数，以及参数应当如何理解。u1类型一共可以表达256条指令。
+
+<li>
+<span id="class文件结构-属性表集合-Code属性表的结构-code属性"></span><strong id="code属性">code属性</strong> class文件中最重要的一个属性，如果把一个java程序中的信息分为代码（code， 方法体中的java代码）和元数据（Metadata，包括类、字段、方法定义及其他信息）两部分，在整个class文件中，code属性用于描述代码，所有其他的数据项目描述元数据
+
+<li>
+exception_table_length 和 exception_table 显示异常处理表,异常表是java代码的一部分，编译器使用异常表而不是简单的跳转命令来实现java异常及finally处理机制。
+
+</ul>
+<p>
+异常表：
+<img src="../wiki/images/jvm6.png" />
+</p>
+
+<div id="class文件结构-属性表集合-Exception属性"><h3 id="Exception属性" class="header"><a href="#class文件结构-属性表集合-Exception属性">Exception属性</a></h3></div>
 
 </div>
 
@@ -219,10 +258,6 @@ Code属性表的结构
     </script>
     <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </section>
-
-   
-</section>
-
     <script src="./js/jquery-1.7.1.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function(){
@@ -231,6 +266,8 @@ Code属性表的结构
     </script>
     <script src="./google-code-prettify/prettify.js"></script>
 
-    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <!--script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML-full"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML-full&latest"></script>
 </body>
 </html>
