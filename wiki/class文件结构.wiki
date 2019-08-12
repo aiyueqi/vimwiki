@@ -105,3 +105,28 @@ code属性表的结构：
 {{images/jvm7.png}}
 
 其中nuber_of_exceptions项表示方法可能抛出number_of_exceptions种checked Exceptions，每一种checked Exceptions使用一个exception_index_table项表示，exception_index_table是一个指向常量池中CONSTANT_Class_info型常量的索引，代表了该受查异常的类型。
+
+== LineNumberTable属性 ==
+描述Java源码行号与字节码行号（字节码的偏移量之间的对应关系），如关闭，抛出异常时对战中将不会显示出错的行号
+
+== LocalVariableTable属性 ==
+描述栈帧中局部变量表中的变量与java源码中定义的变量之间的关系，如关闭，其他人引用这个方法时，所有的参数名称都将丢失
+
+== SourceFile属性 ==
+记录生成这个Class文件的源码文件名称，对大多数的类来说，类名和文件名是一致的，但有一些特殊情况（如内部类）例外。若关闭，抛出异常时，堆栈中将不会显示出错误代码所属的文件名
+
+== ConstantValue属性 ==
+通知虚拟机自动为静态变量赋值，只有被static关键字修饰的变量才可以使用这项属性。
+jvm对非static类型的变量（实例变量）的赋值是在实例构造器<init>方法中进行的；对于类变量，有两种方式可以选择：
+1. 赋值在类构造器<clinit>方法中进行
+2. 使用ConstantValue属性来赋值
+Sun javac编译器的选择是：final static的变量（或者说是常量），并且这个变量的数据类型是基本类型或者java.lang.String的话，就生成ConstantValue属性来进行初始化，如果这个变量没有被final修饰，或者并非基本类型及字符串，则在<clinit>方法中进行初始化
+
+== InnerClasses属性 ==
+记录内部类与宿主类之间的关联，如果一个类中定义了内部类，那编译器将会为它及它所包含的内部类生成InnerClasses属性
+
+== Deprecated属性 ==
+表示某个类、字段或方法，已经被定为不再推荐使用
+
+== Synthetic属性 ==
+代表此字段或方法不是由java源码直接产生的，而是由编译器自行添加的

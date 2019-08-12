@@ -202,8 +202,9 @@ java虚拟机运行时会忽略掉它不认识的属性，以下为9项虚拟机
 java程序方法体里面的代码经过javac编译器处理后，最终变为字节码指令存储在Code属性内，Code属性在方法表中使用。并非所有的方法表都必须存在这个属性，如接口或抽象类中的方法就不存在Code属性。
 </p>
 
-<div id="class文件结构-属性表集合-Code属性表的结构"><h3 id="Code属性表的结构" class="header"><a href="#class文件结构-属性表集合-Code属性表的结构">Code属性表的结构</a></h3></div>
+<div id="class文件结构-属性表集合-Code属性"><h3 id="Code属性" class="header"><a href="#class文件结构-属性表集合-Code属性">Code属性</a></h3></div>
 <p>
+code属性表的结构：
 <img src="../wiki/images/jvm5.png" />
 </p>
 
@@ -227,7 +228,7 @@ max_locals 代表了局部变量表所需的存储空间，单位是Slot，即�
 code_length 和 code 用来存储java源程序编译后生成的字节码指令 code_length代码字节码长度，code存储字节码指令的一系列字节流，每个字节码指令是一个u1类型的单字节，当虚拟机读取到code中的一个字节码时，找出对应的指令，并且可以知道这条指令后面是否需要跟随参数，以及参数应当如何理解。u1类型一共可以表达256条指令。
 
 <li>
-<span id="class文件结构-属性表集合-Code属性表的结构-code属性"></span><strong id="code属性">code属性</strong> class文件中最重要的一个属性，如果把一个java程序中的信息分为代码（code， 方法体中的java代码）和元数据（Metadata，包括类、字段、方法定义及其他信息）两部分，在整个class文件中，code属性用于描述代码，所有其他的数据项目描述元数据
+<span id="class文件结构-属性表集合-Code属性-code属性"></span><strong id="code属性">code属性</strong> class文件中最重要的一个属性，如果把一个java程序中的信息分为代码（code， 方法体中的java代码）和元数据（Metadata，包括类、字段、方法定义及其他信息）两部分，在整个class文件中，code属性用于描述代码，所有其他的数据项目描述元数据
 
 <li>
 exception_table_length 和 exception_table 显示异常处理表,异常表是java代码的一部分，编译器使用异常表而不是简单的跳转命令来实现java异常及finally处理机制。
@@ -238,7 +239,65 @@ exception_table_length 和 exception_table 显示异常处理表,异常表是jav
 <img src="../wiki/images/jvm6.png" />
 </p>
 
+<p>
+上表含义:如果字节码在[start_pc, end_pc)行之间出现了类型为catch_type或其子类的异常（catch_type为指向一个CONSTANT_Class_info型常量的索引），则转到第handler_pc行继续处理，当catch_type为0时，代表任何的异常情况都需要转向到handler_pc行处理
+</p>
 <div id="class文件结构-属性表集合-Exception属性"><h3 id="Exception属性" class="header"><a href="#class文件结构-属性表集合-Exception属性">Exception属性</a></h3></div>
+<p>
+列举出方法中可能抛出的检车异常（checked Exceptions）,也就是方法描述时在throws关键字后面列举的异常，结构如图
+<img src="../wiki/images/jvm7.png" />
+</p>
+
+<p>
+其中nuber_of_exceptions项表示方法可能抛出number_of_exceptions种checked Exceptions，每一种checked Exceptions使用一个exception_index_table项表示，exception_index_table是一个指向常量池中CONSTANT_Class_info型常量的索引，代表了该受查异常的类型。
+</p>
+
+<div id="class文件结构-LineNumberTable属性"><h2 id="LineNumberTable属性" class="header"><a href="#class文件结构-LineNumberTable属性">LineNumberTable属性</a></h2></div>
+<p>
+描述Java源码行号与字节码行号（字节码的偏移量之间的对应关系），如关闭，抛出异常时对战中将不会显示出错的行号
+</p>
+
+<div id="class文件结构-LocalVariableTable属性"><h2 id="LocalVariableTable属性" class="header"><a href="#class文件结构-LocalVariableTable属性">LocalVariableTable属性</a></h2></div>
+<p>
+描述栈帧中局部变量表中的变量与java源码中定义的变量之间的关系，如关闭，其他人引用这个方法时，所有的参数名称都将丢失
+</p>
+
+<div id="class文件结构-SourceFile属性"><h2 id="SourceFile属性" class="header"><a href="#class文件结构-SourceFile属性">SourceFile属性</a></h2></div>
+<p>
+记录生成这个Class文件的源码文件名称，对大多数的类来说，类名和文件名是一致的，但有一些特殊情况（如内部类）例外。若关闭，抛出异常时，堆栈中将不会显示出错误代码所属的文件名
+</p>
+
+<div id="class文件结构-ConstantValue属性"><h2 id="ConstantValue属性" class="header"><a href="#class文件结构-ConstantValue属性">ConstantValue属性</a></h2></div>
+<p>
+通知虚拟机自动为静态变量赋值，只有被static关键字修饰的变量才可以使用这项属性。
+jvm对非static类型的变量（实例变量）的赋值是在实例构造器&lt;init&gt;方法中进行的；对于类变量，有两种方式可以选择：
+</p>
+<ol>
+<li>
+赋值在类构造器&lt;clinit&gt;方法中进行
+
+<li>
+使用ConstantValue属性来赋值
+
+</ol>
+<p>
+Sun javac编译器的选择是：final static的变量（或者说是常量），并且这个变量的数据类型是基本类型或者java.lang.String的话，就生成ConstantValue属性来进行初始化，如果这个变量没有被final修饰，或者并非基本类型及字符串，则在&lt;clinit&gt;方法中进行初始化
+</p>
+
+<div id="class文件结构-InnerClasses属性"><h2 id="InnerClasses属性" class="header"><a href="#class文件结构-InnerClasses属性">InnerClasses属性</a></h2></div>
+<p>
+记录内部类与宿主类之间的关联，如果一个类中定义了内部类，那编译器将会为它及它所包含的内部类生成InnerClasses属性
+</p>
+
+<div id="class文件结构-Deprecated属性"><h2 id="Deprecated属性" class="header"><a href="#class文件结构-Deprecated属性">Deprecated属性</a></h2></div>
+<p>
+表示某个类、字段或方法，已经被定为不再推荐使用
+</p>
+
+<div id="class文件结构-Synthetic属性"><h2 id="Synthetic属性" class="header"><a href="#class文件结构-Synthetic属性">Synthetic属性</a></h2></div>
+<p>
+代表此字段或方法不是由java源码直接产生的，而是由编译器自行添加的
+</p>
 
 </div>
 
