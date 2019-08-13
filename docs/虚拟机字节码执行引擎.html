@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>虚拟机字节码执行引擎</title>
+    <link rel="Stylesheet" type="text/css" href="./css/style.css" />
+    <link rel="stylesheet" type="text/css" href="./google-code-prettify/prettify.css" >
+    <!-- add more style sheets and javascripts -->
+</head>
+<body>
+<!--<body onload="prettyPrint()">-->
+
+<div class="content">
+
+<div id="虚拟机字节码执行引擎"><h1 id="虚拟机字节码执行引擎" class="header"><a href="#虚拟机字节码执行引擎">虚拟机字节码执行引擎</a></h1></div>
+<div id="虚拟机字节码执行引擎-虚拟机与物理机"><h2 id="虚拟机与物理机" class="header"><a href="#虚拟机字节码执行引擎-虚拟机与物理机">虚拟机与物理机</a></h2></div>
+<p>
+执行引擎是java虚拟机最核心的组成部分之一。“虚拟机”是一个相对于“物理机”的概念，这两种机器都有代码执行能力。区别在于：
+</p>
+<ul>
+<li>
+物理机：执行引擎直接建立在处理器、硬件、指令集和操作系统层面上
+
+<li>
+虚拟机：执行引擎由自己实现，可以自行制定指令集与执行引擎的结构体系，能够执行那些不被硬件 <span id="虚拟机字节码执行引擎-虚拟机与物理机-直接"></span><strong id="直接">直接</strong> 支持的指令集格式
+
+</ul>
+
+<p>
+执行引擎执行java代码时可能有解释执行和编译执行两种选择。
+</p>
+
+<div id="虚拟机字节码执行引擎-运行时栈帧结构"><h2 id="运行时栈帧结构" class="header"><a href="#虚拟机字节码执行引擎-运行时栈帧结构">运行时栈帧结构</a></h2></div>
+<p>
+栈帧stack frame：是用于支持虚拟机进行方法调用和方法执行的数据结构，它是虚拟机运行时数据区中的虚拟机栈的栈元素。每个方法从调用开始到执行完成的过程，就对应着一个栈帧在虚拟机栈里面从入栈到出栈的过程
+每一个栈帧都包括了：局部变量表、操作数栈、动态连接、方法返回地址和一些额外的附加信息
+</p>
+
+<div id="虚拟机字节码执行引擎-运行时栈帧结构-局部变量表"><h3 id="局部变量表" class="header"><a href="#虚拟机字节码执行引擎-运行时栈帧结构-局部变量表">局部变量表</a></h3></div>
+
+</div>
+
+<hr class="comment">
+<section class="comment">
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'lotaboutvimwiki'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+    <script src="./js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $('pre').addClass('prettyprint linenums') 
+        prettyPrint()})
+    </script>
+    <script src="./google-code-prettify/prettify.js"></script>
+
+    <!--script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML-full"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML-full&latest"></script>
+</body>
+</html>

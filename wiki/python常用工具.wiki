@@ -1,0 +1,6 @@
+= python常用工具 =
+== ipython ==
+交互式自动补全
+https://blog.csdn.net/gavin_john/article/details/53086766
+
+
