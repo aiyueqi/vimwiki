@@ -2,3 +2,4 @@
 [[rabbitmq]]
 [[mybatis]]
 [[docker]]
+[[mysql]]

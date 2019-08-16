@@ -1,0 +1,3 @@
+= chapter1 mysql architecture and history =
+MYSQL's storage-engine architectur, whose design separates query processing and other server tasks from data storage and retrieval
+{{images/mysql1.png}}
