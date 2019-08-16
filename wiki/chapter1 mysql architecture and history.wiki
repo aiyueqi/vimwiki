@@ -1,3 +1,35 @@
 = chapter1 mysql architecture and history =
+== MySQL's Logical Architecture ==
 MYSQL's storage-engine architectur, whose design separates query processing and other server tasks from data storage and retrieval
 {{images/mysql1.png}}
+1. the topmost layer services: connection handling, authentication, security and so forth
+2. the second layer, much of MySQL's brains are here: query parsing analysis, optimization, caching and all the built-in functions
+3. the third layer contains the storage engines.They are responsible for storing and retrieving all data stored in MySQL
+
+== Connection Management and Security ==
+1. thread and thread pool: Each client connection gets its own thread within the server process.The server caches threads, so they don't need to be created and destroyed for each new connection
+2. security: Authentication is based on username, originating host, and password.Also across an SSL(Secure Sockets Layer) connection.
+
+== Optimization and Execution ==
+MySQL parse queries to create an internal structure(the parse tree), and then applies a variety of optimizations, including 
+- rewriting the query
+- determinging the order in which it will read tables
+- choosing which indexes to use
+- ......
+
+optimizer: The optimizer asks the storage engine about some of its capabilities and the cost of certain operations, and for statistics on the table data.
+
+cache: Before even parsing the query, the server consults the query cache, which ccan store onf SELECT statements, along with their result sets. If anyone issues a qury that's identical to one already in the cache, it can simply pass back the stored result set.
+
+== Concurrency Control ==
+Two levels:
+- The server level
+- The storage engine level
+
+== Read/Write Locks ==
+- shared locks(read locks): shared, mutually nonblocking
+- exclusive locks(write locks): exclusive, they block both read locks and other write locks
+
+== Lock Granularity ==
+Two most inportant lock strategies
+- Table locks: the one with the lowest overhead
