@@ -1,15 +1,15 @@
 .com { color: #93a1a1; }
-.lit { color: #d9f871; }
+.lit { color: #195f91; }
 .pun, .opn, .clo { color: #93a1a1; }
 .fun { color: #dc322f; }
-.str, .atv { color: #825f9b; }
-.kwd, .prettyprint .tag { color: #56d0f4; }
-.typ, .atn, .dec, .var { color: #7cf3cf; }
-.pln { color: #ff9f21; }
+.str, .atv { color: #D14; }
+.kwd, .prettyprint .tag { color: #1e347b; }
+.typ, .atn, .dec, .var { color: teal; }
+.pln { color: #48484c; }
 
 .prettyprint {
   padding: 8px;
-  background-color: #181e22;
+  background-color: #f7f7f9;
   border: 1px solid #e1e1e8;
 }
 .prettyprint.linenums {
@@ -26,4 +26,5 @@ ol.linenums li {
   padding-left: 12px;
   color: #bebec5;
   line-height: 20px;
+  text-shadow: 0 1px 0 #fff;
 }
