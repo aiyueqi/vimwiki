@@ -32,4 +32,30 @@ Two levels:
 
 == Lock Granularity ==
 Two most inportant lock strategies
-- Table locks: the one with the lowest overhead
+- Table locks: the one with the lowest overhead. Write locks have a higher priority than read locks, write locks can advance past readlocks in the queue.Although storage engines can manage their own locks, MySqL itself also uses a variety of locks.For instance, the server uses a table-level lock for statements such as ALTER TABLE, regardless of the storage engine.
+- Row locks: offers the greatest concurrency and carries the greatest overhead. Row locks are implemented in the storage engine, the server is completely unaware of row locks.
+
+== Transactions ==
+A transaction is a group of SQL queries that are treated atomically.
+ACID:
+- Atomicity
+- Consistency
+- Isolation
+- Durability
+
+== Isolation Levels ==
+The SQL standard defines four isolation levels, with specific rules for which changes are and aren't visible inside and outside a transaction.Lower isolation levels typically allow higher concurrency and have lower overhead.
+
+TODO 四种隔离级别的理解
+- read uncommitted: transactions can view the results of other uncommitted treansactions. Rarely used in practice. Also known as a *dirty read*
+- read committed: the default isolation level for most database but not MySQL. A transaction will see only those changes made by tansactions that were already committed when it began, and its changes won't be visible to others until it has committed. Also known as a *nonrepeatable read*. This means you can run the same statement twice and see different data.
+- repeatable read: MySQL's default transaction iolation level.It guarantees that any rows a transaction reads will "look the same" in subsequent reads within the same transaction.But phantom reads can happen: when another transaction inserts a new row into the range, then you select the same range again; you will then see the new "phantom" row.InnoDB solve the phantom read problem with multiversion concurrentcy control.
+- serializable: solves the phantom read problem by forcing transactions to be ordered. 
+
+== Deadlocks ==
+InnoDB: roll back the transaction that has the fewest exclusive row locks.
+Deadlocks cannot be broken without rolling back one of the transactions, either partially or wholly. They are a fact of life in transactional systems, and your applications should be designed to handle them.
+
+== Transaction Logging ==
+Instead of updating the tables on disk each time a change occurs, the storage engine can change its in-memory copy of data. The storage engine can then write a record of the change to the transaction log.This is also a relatively fast operation, because appending log events involves sequential I/O in one small area of the disk instead of random I/O in many places. Then, at some later time, a process can update the table on disk.
+Most ostorage engines that use this technique,known as *write-ahead logging* end up writing the changes to disk twice.
