@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>jvm</title>
+    <title>chapter2 Indexing for High Performance</title>
     <link rel="Stylesheet" type="text/css" href="./css/style.css" />
     <link rel="stylesheet" type="text/css" href="./google-code-prettify/prettify.css" >
     <!-- add more style sheets and javascripts -->
@@ -12,9 +12,16 @@
 
 <div class="content">
 
-<div id="[[class文件结构]]"><h1 id="[[class文件结构]]" class="header"><a href="#[[class文件结构]]"><a href="class文件结构.html">class文件结构</a></a></h1></div>
-<div id="[[虚拟机类加载机制]]"><h1 id="[[虚拟机类加载机制]]" class="header"><a href="#[[虚拟机类加载机制]]"><a href="虚拟机类加载机制.html">虚拟机类加载机制</a></a></h1></div>
-<div id="[[虚拟机字节码执行引擎]]"><h1 id="[[虚拟机字节码执行引擎]]" class="header"><a href="#[[虚拟机字节码执行引擎]]"><a href="虚拟机字节码执行引擎.html">虚拟机字节码执行引擎</a></a></h1></div>
+<div id="Indexing for High Performance"><h1 id="Indexing for High Performance" class="header"><a href="#Indexing for High Performance">Indexing for High Performance</a></h1></div>
+
+<p>
+Creating truly optimal indexes will ofter require you to rewrite queries.
+</p>
+
+<div id="Indexing for High Performance-Indexing Basics"><h2 id="Indexing Basics" class="header"><a href="#Indexing for High Performance-Indexing Basics">Indexing Basics</a></h2></div>
+<p>
+If you index more than one column, the column order is very important, because MySQL can only search efficiently on a leftmost prefix of the index. Creating an index on two columns is not the same as creating two separate single-column indexes.
+</p>
 
 </div>
 

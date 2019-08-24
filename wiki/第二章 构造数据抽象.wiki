@@ -68,5 +68,5 @@ cdr: 提取复合对象的剩余部分
 }}}
 ==== 层次性结构 ====
 元素本身是序列的序列，可以看作树，序列里的元素就是树的分支
-{{images/sicp1.png}}
-{{images/sicp2.png}}
+{{../docs/images/sicp1.png}}
+{{../docs/images/sicp2.png}}

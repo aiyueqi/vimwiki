@@ -46,7 +46,7 @@ class文件的开头4个字节，用来确定文件是否能被虚拟机接受�
 
 <p>
 常量池中的每一项常量都是一个表，共有11种结构各不相同的表结构数据，表开始的第一位都是一个u1类型的标志位tag，代表这个常量属于哪种常量类型。
-<img src="../wiki/images/jvm1.png" />
+<img src="images/jvm1.png" />
 </p>
 
 <p>
@@ -130,7 +130,7 @@ access_flags:
 
 <p>
 字段表的最终格式：
-<img src="../wiki/images/jvm2.png" />
+<img src="images/jvm2.png" />
 其中：
 </p>
 <ul>
@@ -195,7 +195,7 @@ Class文件存储格式对方法的描述与对字段的描述几乎完全一致
 属性表attribute_info，与Class文件中其他的数据项目要求严格的顺序，长度和内容不同，属性表集合的限制较宽松，不再要求各个属性表有严格的顺序。
 只要不与已有的属性名重复，任何人实现的编译器都可以向属性表中写入自己定义的属性信息。
 java虚拟机运行时会忽略掉它不认识的属性，以下为9项虚拟机实现应当能识别的属性
-<img src="../wiki/images/jvm4.png" />
+<img src="images/jvm4.png" />
 </p>
 
 <p>
@@ -205,7 +205,7 @@ java程序方法体里面的代码经过javac编译器处理后，最终变为�
 <div id="class文件结构-属性表集合-Code属性"><h3 id="Code属性" class="header"><a href="#class文件结构-属性表集合-Code属性">Code属性</a></h3></div>
 <p>
 code属性表的结构：
-<img src="../wiki/images/jvm5.png" />
+<img src="images/jvm5.png" />
 </p>
 
 <p>
@@ -236,7 +236,7 @@ exception_table_length 和 exception_table 显示异常处理表,异常表是jav
 </ul>
 <p>
 异常表：
-<img src="../wiki/images/jvm6.png" />
+<img src="images/jvm6.png" />
 </p>
 
 <p>
@@ -245,7 +245,7 @@ exception_table_length 和 exception_table 显示异常处理表,异常表是jav
 <div id="class文件结构-属性表集合-Exception属性"><h3 id="Exception属性" class="header"><a href="#class文件结构-属性表集合-Exception属性">Exception属性</a></h3></div>
 <p>
 列举出方法中可能抛出的检车异常（checked Exceptions）,也就是方法描述时在throws关键字后面列举的异常，结构如图
-<img src="../wiki/images/jvm7.png" />
+<img src="images/jvm7.png" />
 </p>
 
 <p>
