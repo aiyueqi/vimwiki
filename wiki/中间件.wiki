@@ -1,5 +1,5 @@
-[[redis]]
-[[rabbitmq]]
-[[mybatis]]
-[[docker]]
-[[mysql]]
+= [[mysql]] =
+= [[redis]] =
+= [[rabbitmq]] =
+= [[mybatis]] =
+= [[docker]] =

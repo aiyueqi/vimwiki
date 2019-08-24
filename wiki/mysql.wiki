@@ -1,2 +1,2 @@
 = mysql =
-[[high performance mysql note]]
+== [[high performance mysql note]] ==
