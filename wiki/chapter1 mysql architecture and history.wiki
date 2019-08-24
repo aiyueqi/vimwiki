@@ -59,3 +59,60 @@ Deadlocks cannot be broken without rolling back one of the transactions, either 
 == Transaction Logging ==
 Instead of updating the tables on disk each time a change occurs, the storage engine can change its in-memory copy of data. The storage engine can then write a record of the change to the transaction log.This is also a relatively fast operation, because appending log events involves sequential I/O in one small area of the disk instead of random I/O in many places. Then, at some later time, a process can update the table on disk.
 Most ostorage engines that use this technique,known as *write-ahead logging* end up writing the changes to disk twice.
+
+== Transaction in MySQL ==
+=== Implicit and explicit locking ===
+InnoDB uses a two-pase locking protocol.
+Implicit locking: acquire locks at any time during a transaction, but it does not release them until a COMMIT or ROLLBACK. It releases all the locks at the same time. InnoDB handles locks automatically, according to your isolation level.
+
+Explicit locking: InnoDB also supports explicit locking, which the SQL standard does not mention at all.
+- SELECT ... LOCK IN SHARE MODE
+- SELECT ... FOR UPDATE
+
+== Multiversion Concurrency Control ==
+=== MVCC ===
+MVCC: multiversion concurrency control. It avoids the need for locking at all in many cases and can have much lower overhead.Depending on how it is implemented, it can allow nonlocking reads, while locking only the necessary rows during write operations.
+
+MVCC works by keeping a snapshot of the data as it existed at some point in time. This means transactions can see a consistent view of the data, no matter how long they run. It also means different transactions can see different data in the same tables at the same time.
+
+Each storage engine implements MVCC differently. Some of the variations include *optimistic* and *pessimistic* concurrency control.
+
+==== MVCC in InnoDB ====
+InnoDB implements MVCC by storing with each row two additional, hidden values
+1. record when the row was created
+2. when the row was expired or deleted.
+
+system version number: a number that increments each time a transaction begins.
+the row stores the system version number at the time each event occurred. Each transactions keeps its own record of the current system version, as of the time it began.
+How this applies to particular operations when the tranaction isolation level is *REPEATABLE READ*:
+- SELECT: InnoDB must examine each row to ensure that it meets two criteria:
+    a) InnoDB must find a version of the row that is <= the transaction. This ensures that either the row existed before the transaction began, or the transaction created or altered the row.
+    b) The row's deletion version must be undefined or greater than the transaction's version. This ensures that the row wasn't deleted before the transaction began.
+    Rows that pass both tests may be returned as the query's result.
+- INSERT: InnoDB records the current system version number with the new row.
+- DELETE: InnoDB records the current system version number as the row's deletion ID
+- UPDATE: InnoDB writes a new copy of the row, using the system version number for the new row's version. And writes the system vrsion number as the old row's deletion version.
+
+Advantage: Most read queries never acquire locks. They simply read data as fast as they can, making sure to select only rows that meet the criterias.
+DrawBack: Store more data, do more work
+
+MVCC works only with the REPEATABLE READ and READ COMMITTED isolation levels.
+
+== MySQL's Storage Engines ==
+=== The InnoDB Engine ===
+InnoDB stores its data in a series of one or more data files that are collectively known as a *tablespace*.
+
+InnoDB uses MVCC to achieve high comcurrency, and it implements all four SQL standard isolation levels. It defaults to the REPEATABLE READ isolation level, and it has a *next-key* locking strategy that prevents phantom reads in this isolation level: rather than locking only the rows you've touched in a query, InnoDB locks gaps in the index structure as well, preventing phantoms from being inserted.(TODO 那最高级别seriliaze还有什么用？)
+
+InnoDB tables are built on a clustered index. It provides very fast primary key lookups. Secondary indexs contain the primary key columns.
+
+InnoDB has a variety of internal optimizations. 
+
+InnoDB supports truly "hot" online bakups through a variety of mechanisms.
+
+=== Selecting the Right Engine ===
+Some factors to consider:
+- Transactions
+- Backups
+- Crash recovery
+- Special features

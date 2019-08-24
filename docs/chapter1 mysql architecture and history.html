@@ -13,10 +13,275 @@
 <div class="content">
 
 <div id="chapter1 mysql architecture and history"><h1 id="chapter1 mysql architecture and history" class="header"><a href="#chapter1 mysql architecture and history">chapter1 mysql architecture and history</a></h1></div>
+<div id="chapter1 mysql architecture and history-MySQL's Logical Architecture"><h2 id="MySQL's Logical Architecture" class="header"><a href="#chapter1 mysql architecture and history-MySQL's Logical Architecture">MySQL's Logical Architecture</a></h2></div>
 <p>
 MYSQL's storage-engine architectur, whose design separates query processing and other server tasks from data storage and retrieval
 <img src="../wiki/images/mysql1.png" />
 </p>
+<ol>
+<li>
+the topmost layer services: connection handling, authentication, security and so forth
+
+<li>
+the second layer, much of MySQL's brains are here: query parsing analysis, optimization, caching and all the built-in functions
+
+<li>
+the third layer contains the storage engines.They are responsible for storing and retrieving all data stored in MySQL
+
+</ol>
+
+<div id="chapter1 mysql architecture and history-Connection Management and Security"><h2 id="Connection Management and Security" class="header"><a href="#chapter1 mysql architecture and history-Connection Management and Security">Connection Management and Security</a></h2></div>
+<ol>
+<li>
+thread and thread pool: Each client connection gets its own thread within the server process.The server caches threads, so they don't need to be created and destroyed for each new connection
+
+<li>
+security: Authentication is based on username, originating host, and password.Also across an SSL(Secure Sockets Layer) connection.
+
+</ol>
+
+<div id="chapter1 mysql architecture and history-Optimization and Execution"><h2 id="Optimization and Execution" class="header"><a href="#chapter1 mysql architecture and history-Optimization and Execution">Optimization and Execution</a></h2></div>
+<p>
+MySQL parse queries to create an internal structure(the parse tree), and then applies a variety of optimizations, including 
+</p>
+<ul>
+<li>
+rewriting the query
+
+<li>
+determinging the order in which it will read tables
+
+<li>
+choosing which indexes to use
+
+<li>
+......
+
+</ul>
+
+<p>
+optimizer: The optimizer asks the storage engine about some of its capabilities and the cost of certain operations, and for statistics on the table data.
+</p>
+
+<p>
+cache: Before even parsing the query, the server consults the query cache, which ccan store onf SELECT statements, along with their result sets. If anyone issues a qury that's identical to one already in the cache, it can simply pass back the stored result set.
+</p>
+
+<div id="chapter1 mysql architecture and history-Concurrency Control"><h2 id="Concurrency Control" class="header"><a href="#chapter1 mysql architecture and history-Concurrency Control">Concurrency Control</a></h2></div>
+<p>
+Two levels:
+</p>
+<ul>
+<li>
+The server level
+
+<li>
+The storage engine level
+
+</ul>
+
+<div id="chapter1 mysql architecture and history-Read/Write Locks"><h2 id="Read/Write Locks" class="header"><a href="#chapter1 mysql architecture and history-Read/Write Locks">Read/Write Locks</a></h2></div>
+<ul>
+<li>
+shared locks(read locks): shared, mutually nonblocking
+
+<li>
+exclusive locks(write locks): exclusive, they block both read locks and other write locks
+
+</ul>
+
+<div id="chapter1 mysql architecture and history-Lock Granularity"><h2 id="Lock Granularity" class="header"><a href="#chapter1 mysql architecture and history-Lock Granularity">Lock Granularity</a></h2></div>
+<p>
+Two most inportant lock strategies
+</p>
+<ul>
+<li>
+Table locks: the one with the lowest overhead. Write locks have a higher priority than read locks, write locks can advance past readlocks in the queue.Although storage engines can manage their own locks, MySqL itself also uses a variety of locks.For instance, the server uses a table-level lock for statements such as ALTER TABLE, regardless of the storage engine.
+
+<li>
+Row locks: offers the greatest concurrency and carries the greatest overhead. Row locks are implemented in the storage engine, the server is completely unaware of row locks.
+
+</ul>
+
+<div id="chapter1 mysql architecture and history-Transactions"><h2 id="Transactions" class="header"><a href="#chapter1 mysql architecture and history-Transactions">Transactions</a></h2></div>
+<p>
+A transaction is a group of SQL queries that are treated atomically.
+ACID:
+</p>
+<ul>
+<li>
+Atomicity
+
+<li>
+Consistency
+
+<li>
+Isolation
+
+<li>
+Durability
+
+</ul>
+
+<div id="chapter1 mysql architecture and history-Isolation Levels"><h2 id="Isolation Levels" class="header"><a href="#chapter1 mysql architecture and history-Isolation Levels">Isolation Levels</a></h2></div>
+<p>
+The SQL standard defines four isolation levels, with specific rules for which changes are and aren't visible inside and outside a transaction.Lower isolation levels typically allow higher concurrency and have lower overhead.
+</p>
+
+<p>
+<span class="todo">TODO</span> 四种隔离级别的理解
+</p>
+<ul>
+<li>
+read uncommitted: transactions can view the results of other uncommitted treansactions. Rarely used in practice. Also known as a <span id="chapter1 mysql architecture and history-Isolation Levels-dirty read"></span><strong id="dirty read">dirty read</strong>
+
+<li>
+read committed: the default isolation level for most database but not MySQL. A transaction will see only those changes made by tansactions that were already committed when it began, and its changes won't be visible to others until it has committed. Also known as a <span id="chapter1 mysql architecture and history-Isolation Levels-nonrepeatable read"></span><strong id="nonrepeatable read">nonrepeatable read</strong>. This means you can run the same statement twice and see different data.
+
+<li>
+repeatable read: MySQL's default transaction iolation level.It guarantees that any rows a transaction reads will "look the same" in subsequent reads within the same transaction.But phantom reads can happen: when another transaction inserts a new row into the range, then you select the same range again; you will then see the new "phantom" row.InnoDB solve the phantom read problem with multiversion concurrentcy control.
+
+<li>
+serializable: solves the phantom read problem by forcing transactions to be ordered. 
+
+</ul>
+
+<div id="chapter1 mysql architecture and history-Deadlocks"><h2 id="Deadlocks" class="header"><a href="#chapter1 mysql architecture and history-Deadlocks">Deadlocks</a></h2></div>
+<p>
+InnoDB: roll back the transaction that has the fewest exclusive row locks.
+Deadlocks cannot be broken without rolling back one of the transactions, either partially or wholly. They are a fact of life in transactional systems, and your applications should be designed to handle them.
+</p>
+
+<div id="chapter1 mysql architecture and history-Transaction Logging"><h2 id="Transaction Logging" class="header"><a href="#chapter1 mysql architecture and history-Transaction Logging">Transaction Logging</a></h2></div>
+<p>
+Instead of updating the tables on disk each time a change occurs, the storage engine can change its in-memory copy of data. The storage engine can then write a record of the change to the transaction log.This is also a relatively fast operation, because appending log events involves sequential I/O in one small area of the disk instead of random I/O in many places. Then, at some later time, a process can update the table on disk.
+Most ostorage engines that use this technique,known as <span id="chapter1 mysql architecture and history-Transaction Logging-write-ahead logging"></span><strong id="write-ahead logging">write-ahead logging</strong> end up writing the changes to disk twice.
+</p>
+
+<div id="chapter1 mysql architecture and history-Transaction in MySQL"><h2 id="Transaction in MySQL" class="header"><a href="#chapter1 mysql architecture and history-Transaction in MySQL">Transaction in MySQL</a></h2></div>
+<div id="chapter1 mysql architecture and history-Transaction in MySQL-Implicit and explicit locking"><h3 id="Implicit and explicit locking" class="header"><a href="#chapter1 mysql architecture and history-Transaction in MySQL-Implicit and explicit locking">Implicit and explicit locking</a></h3></div>
+<p>
+InnoDB uses a two-pase locking protocol.
+Implicit locking: acquire locks at any time during a transaction, but it does not release them until a COMMIT or ROLLBACK. It releases all the locks at the same time. InnoDB handles locks automatically, according to your isolation level.
+</p>
+
+<p>
+Explicit locking: InnoDB also supports explicit locking, which the SQL standard does not mention at all.
+</p>
+<ul>
+<li>
+SELECT ... LOCK IN SHARE MODE
+
+<li>
+SELECT ... FOR UPDATE
+
+</ul>
+
+<div id="chapter1 mysql architecture and history-Multiversion Concurrency Control"><h2 id="Multiversion Concurrency Control" class="header"><a href="#chapter1 mysql architecture and history-Multiversion Concurrency Control">Multiversion Concurrency Control</a></h2></div>
+<div id="chapter1 mysql architecture and history-Multiversion Concurrency Control-MVCC"><h3 id="MVCC" class="header"><a href="#chapter1 mysql architecture and history-Multiversion Concurrency Control-MVCC">MVCC</a></h3></div>
+<p>
+MVCC: multiversion concurrency control. It avoids the need for locking at all in many cases and can have much lower overhead.Depending on how it is implemented, it can allow nonlocking reads, while locking only the necessary rows during write operations.
+</p>
+
+<p>
+MVCC works by keeping a snapshot of the data as it existed at some point in time. This means transactions can see a consistent view of the data, no matter how long they run. It also means different transactions can see different data in the same tables at the same time.
+</p>
+
+<p>
+Each storage engine implements MVCC differently. Some of the variations include <span id="chapter1 mysql architecture and history-Multiversion Concurrency Control-MVCC-optimistic"></span><strong id="optimistic">optimistic</strong> and <span id="chapter1 mysql architecture and history-Multiversion Concurrency Control-MVCC-pessimistic"></span><strong id="pessimistic">pessimistic</strong> concurrency control.
+</p>
+
+<div id="chapter1 mysql architecture and history-Multiversion Concurrency Control-MVCC-MVCC in InnoDB"><h4 id="MVCC in InnoDB" class="header"><a href="#chapter1 mysql architecture and history-Multiversion Concurrency Control-MVCC-MVCC in InnoDB">MVCC in InnoDB</a></h4></div>
+<p>
+InnoDB implements MVCC by storing with each row two additional, hidden values
+</p>
+<ol>
+<li>
+record when the row was created
+
+<li>
+when the row was expired or deleted.
+
+</ol>
+
+<p>
+system version number: a number that increments each time a transaction begins.
+the row stores the system version number at the time each event occurred. Each transactions keeps its own record of the current system version, as of the time it began.
+How this applies to particular operations when the tranaction isolation level is <span id="chapter1 mysql architecture and history-Multiversion Concurrency Control-MVCC-MVCC in InnoDB-REPEATABLE READ"></span><strong id="REPEATABLE READ">REPEATABLE READ</strong>:
+</p>
+<ul>
+<li>
+SELECT: InnoDB must examine each row to ensure that it meets two criteria:
+
+<ol>
+<li>
+InnoDB must find a version of the row that is &lt;= the transaction. This ensures that either the row existed before the transaction began, or the transaction created or altered the row.
+
+<li>
+The row's deletion version must be undefined or greater than the transaction's version. This ensures that the row wasn't deleted before the transaction began.
+    Rows that pass both tests may be returned as the query's result.
+
+</ol>
+<li>
+INSERT: InnoDB records the current system version number with the new row.
+
+<li>
+DELETE: InnoDB records the current system version number as the row's deletion ID
+
+<li>
+UPDATE: InnoDB writes a new copy of the row, using the system version number for the new row's version. And writes the system vrsion number as the old row's deletion version.
+
+</ul>
+
+<p>
+Advantage: Most read queries never acquire locks. They simply read data as fast as they can, making sure to select only rows that meet the criterias.
+DrawBack: Store more data, do more work
+</p>
+
+<p>
+MVCC works only with the REPEATABLE READ and READ COMMITTED isolation levels.
+</p>
+
+<div id="chapter1 mysql architecture and history-MySQL's Storage Engines"><h2 id="MySQL's Storage Engines" class="header"><a href="#chapter1 mysql architecture and history-MySQL's Storage Engines">MySQL's Storage Engines</a></h2></div>
+<div id="chapter1 mysql architecture and history-MySQL's Storage Engines-The InnoDB Engine"><h3 id="The InnoDB Engine" class="header"><a href="#chapter1 mysql architecture and history-MySQL's Storage Engines-The InnoDB Engine">The InnoDB Engine</a></h3></div>
+<p>
+InnoDB stores its data in a series of one or more data files that are collectively known as a <span id="chapter1 mysql architecture and history-MySQL's Storage Engines-The InnoDB Engine-tablespace"></span><strong id="tablespace">tablespace</strong>.
+</p>
+
+<p>
+InnoDB uses MVCC to achieve high comcurrency, and it implements all four SQL standard isolation levels. It defaults to the REPEATABLE READ isolation level, and it has a <span id="chapter1 mysql architecture and history-MySQL's Storage Engines-The InnoDB Engine-next-key"></span><strong id="next-key">next-key</strong> locking strategy that prevents phantom reads in this isolation level: rather than locking only the rows you've touched in a query, InnoDB locks gaps in the index structure as well, preventing phantoms from being inserted.(<span class="todo">TODO</span> 那最高级别seriliaze还有什么用？)
+</p>
+
+<p>
+InnoDB tables are built on a clustered index. It provides very fast primary key lookups. Secondary indexs contain the primary key columns.
+</p>
+
+<p>
+InnoDB has a variety of internal optimizations. 
+</p>
+
+<p>
+InnoDB supports truly "hot" online bakups through a variety of mechanisms.
+</p>
+
+<div id="chapter1 mysql architecture and history-MySQL's Storage Engines-Selecting the Right Engine"><h3 id="Selecting the Right Engine" class="header"><a href="#chapter1 mysql architecture and history-MySQL's Storage Engines-Selecting the Right Engine">Selecting the Right Engine</a></h3></div>
+<p>
+Some factors to consider:
+</p>
+<ul>
+<li>
+Transactions
+
+<li>
+Backups
+
+<li>
+Crash recovery
+
+<li>
+Special features
+
+</ul>
 
 </div>
 

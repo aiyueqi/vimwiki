@@ -1,1 +1,2 @@
 [[chapter1 mysql architecture and history]]
+[[chapter2 Indexing for High Performance]]
