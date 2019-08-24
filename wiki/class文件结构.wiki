@@ -15,7 +15,7 @@ class文件的开头4个字节，用来确定文件是否能被虚拟机接受�
 由于常量池中常量的数量是不固定的，所以在常量池的入口需要放置一项u2类型的数据，代表长两次容量计数值
 
 常量池中的每一项常量都是一个表，共有11种结构各不相同的表结构数据，表开始的第一位都是一个u1类型的标志位tag，代表这个常量属于哪种常量类型。
-{{images/jvm1.png}}
+{{../docs/images/jvm1.png}}
 
 其中tag是标志位,length值说明这个utf-8编码的字符串长度是多少字节，后面紧跟的长度为length字节的连续数据是一个使用utf-8略缩编码表示的字符串
 Class文件中方法、字段等都需要引用CONSTANT_Utf8_info型常量来描述名称
@@ -53,7 +53,7 @@ access_flags:
 这些信息都是bool值，用标志位来表示，而字段名称，字段的数据类型无法固定，需要引用常量池中的常量来描述
 
 字段表的最终格式：
-{{images/jvm2.png}}
+{{../docs/images/jvm2.png}}
 其中：
 - name_index 代表字段的简单名称，是对常量池的引用
 - descriptor_index 代表字段和方法的描述符，也是对常量池的引用
@@ -80,13 +80,13 @@ Class文件存储格式对方法的描述与对字段的描述几乎完全一致
 属性表attribute_info，与Class文件中其他的数据项目要求严格的顺序，长度和内容不同，属性表集合的限制较宽松，不再要求各个属性表有严格的顺序。
 只要不与已有的属性名重复，任何人实现的编译器都可以向属性表中写入自己定义的属性信息。
 java虚拟机运行时会忽略掉它不认识的属性，以下为9项虚拟机实现应当能识别的属性
-{{images/jvm4.png}}
+{{../docs/images/jvm4.png}}
 
 java程序方法体里面的代码经过javac编译器处理后，最终变为字节码指令存储在Code属性内，Code属性在方法表中使用。并非所有的方法表都必须存在这个属性，如接口或抽象类中的方法就不存在Code属性。
 
 === Code属性 ===
 code属性表的结构：
-{{images/jvm5.png}}
+{{../docs/images/jvm5.png}}
 
 其中:
 - attribute_name_index 是一项指向CONSTANT_Utf8_info型常量的索引，常量值固定为"Code", 它代表了该属性的属性名称
@@ -97,12 +97,12 @@ code属性表的结构：
 - *code属性* class文件中最重要的一个属性，如果把一个java程序中的信息分为代码（code， 方法体中的java代码）和元数据（Metadata，包括类、字段、方法定义及其他信息）两部分，在整个class文件中，code属性用于描述代码，所有其他的数据项目描述元数据
 - exception_table_length 和 exception_table 显示异常处理表,异常表是java代码的一部分，编译器使用异常表而不是简单的跳转命令来实现java异常及finally处理机制。
 异常表：
-{{images/jvm6.png}}
+{{../docs/images/jvm6.png}}
 
 上表含义:如果字节码在[start_pc, end_pc)行之间出现了类型为catch_type或其子类的异常（catch_type为指向一个CONSTANT_Class_info型常量的索引），则转到第handler_pc行继续处理，当catch_type为0时，代表任何的异常情况都需要转向到handler_pc行处理
 === Exception属性 ===
 列举出方法中可能抛出的检车异常（checked Exceptions）,也就是方法描述时在throws关键字后面列举的异常，结构如图
-{{images/jvm7.png}}
+{{../docs/images/jvm7.png}}
 
 其中nuber_of_exceptions项表示方法可能抛出number_of_exceptions种checked Exceptions，每一种checked Exceptions使用一个exception_index_table项表示，exception_index_table是一个指向常量池中CONSTANT_Class_info型常量的索引，代表了该受查异常的类型。
 

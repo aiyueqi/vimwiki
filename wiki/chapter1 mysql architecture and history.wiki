@@ -1,7 +1,7 @@
 = chapter1 mysql architecture and history =
 == MySQL's Logical Architecture ==
 MYSQL's storage-engine architectur, whose design separates query processing and other server tasks from data storage and retrieval
-{{images/mysql1.png}}
+{{../docs/images/mysql1.png}}
 1. the topmost layer services: connection handling, authentication, security and so forth
 2. the second layer, much of MySQL's brains are here: query parsing analysis, optimization, caching and all the built-in functions
 3. the third layer contains the storage engines.They are responsible for storing and retrieving all data stored in MySQL
