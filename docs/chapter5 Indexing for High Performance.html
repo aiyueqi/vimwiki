@@ -29,6 +29,97 @@ Indexes are implemented in the storage engine layer, not the server layer.
 </p>
 
 <div id="Indexing for High Performance-Type of indexes-B-Tree indexes"><h3 id="B-Tree indexes" class="header"><a href="#Indexing for High Performance-Type of indexes-B-Tree indexes">B-Tree indexes</a></h3></div>
+<p>
+Storage engines may use different indexs. InnoDB uses B+Trees.
+</p>
+
+<ol>
+<li>
+MyISAM
+
+<ul>
+<li>
+uses a prefix compression technique that makes indexes smaller.
+
+<li>
+indexes refer to the indexed rows by their physical storage locations
+
+</ul>
+<li>
+InnoDB
+
+<ul>
+<li>
+leaves valuse uncompressed in its indexs
+
+<li>
+indexes refer to the indexed rows by their primary key values
+
+</ul>
+</ol>
+<p>
+B+Tree structure
+<img src="images/mysql2.png" />
+</p>
+
+<div id="Indexing for High Performance-Type of indexes-B-Tree indexes-Types of queries that can use a B-Tree index"><h4 id="Types of queries that can use a B-Tree index" class="header"><a href="#Indexing for High Performance-Type of indexes-B-Tree indexes-Types of queries that can use a B-Tree index">Types of queries that can use a B-Tree index</a></h4></div>
+<ul>
+<li>
+Match the full value
+
+<li>
+Match a leftmost prefix
+
+<li>
+Match a column prefix
+
+<li>
+Match a range of values
+
+<li>
+Match one part exactly and match a range on another part
+
+<li>
+Index-only queries
+
+</ul>
+
+<p>
+limitations of B-Tree indexes:
+</p>
+<ul>
+<li>
+Not useful if the lookup does not start from the leftmost side of the indexed columns.
+
+<li>
+You can't skip columns in the index
+
+<li>
+The storage engine can't optimize accesses with any columns to the right of the first range condition.
+
+</ul>
+
+<p>
+The column order is extremely important.
+</p>
+<div id="Indexing for High Performance-Type of indexes-B-Tree indexes-Hash indexs"><h4 id="Hash indexs" class="header"><a href="#Indexing for High Performance-Type of indexes-B-Tree indexes-Hash indexs">Hash indexs</a></h4></div>
+<p>
+A hash index is built on a hash table and is useful only for exact lookups that use every column in the index.
+In MySQL only the Memory storage engine supports explicit hash indexes.
+</p>
+
+<div id="Indexing for High Performance-Type of indexes-B-Tree indexes-Benefits of Indexes"><h4 id="Benefits of Indexes" class="header"><a href="#Indexing for High Performance-Type of indexes-B-Tree indexes-Benefits of Indexes">Benefits of Indexes</a></h4></div>
+<ol>
+<li>
+Indexes reduce the amount of data the server has to examine
+
+<li>
+Indexes help the serve avoid sorting and temporary tables
+
+<li>
+Indexes turn random I/O into sequential I/O
+
+</ol>
 
 </div>
 
