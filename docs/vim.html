@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>vim</title>
+    <link rel="Stylesheet" type="text/css" href="./css/style.css" />
+    <link rel="stylesheet" type="text/css" href="./google-code-prettify/prettify.css" >
+    <!-- add more style sheets and javascripts -->
+</head>
+<body>
+<!--<body onload="prettyPrint()">-->
+
+<div class="content">
+
+<div id="vim使用与配置"><h1 id="vim使用与配置" class="header"><a href="#vim使用与配置">vim使用与配置</a></h1></div>
+<div id="vim使用与配置-使用"><h2 id="使用" class="header"><a href="#vim使用与配置-使用">使用</a></h2></div>
+<p>
+<a href="https://wiki.jikexueyuan.com/project/learn-linux-step-by-step/vim-and-vi-common-commands.html">vim 与 vi 常用命令 - 一步一步学 Linux - 极客学院Wiki</a>
+</p>
+
+<p>
+替换
+:1,$s/word1/word2/gc
+</p>
+
+<p>
+复制一个单词
+光标移到想要被复制词的词首，输入yw
+单词任意位置 yaw
+</p>
+
+<p>
+删除一个单词 
+光标移到想要被复制词的词首，输入dw
+单词任意位置 daw
+</p>
+
+<div id="vim使用与配置-使用-分屏"><h3 id="分屏" class="header"><a href="#vim使用与配置-使用-分屏">分屏</a></h3></div>
+
+
+<div id="vim使用与配置-Vundle配置"><h2 id="Vundle配置" class="header"><a href="#vim使用与配置-Vundle配置">Vundle配置</a></h2></div>
+<p>
+" Vundle Settings
+set nocompatible              " be iMproved, required
+filetype off                  " required
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'scrooloose/nerdtree.git'
+</p>
+
+<p>
+" All of your Plugins must be added before the following line
+call vundle#end()              "required
+</p>
+
+<div id="vim使用与配置-基本配置"><h2 id="基本配置" class="header"><a href="#vim使用与配置-基本配置">基本配置</a></h2></div>
+<p>
+set nocompatible
+filetype plugin on
+syntax on               "语法高亮
+set number              "显示行号
+set showmode            "在底部显示处于命令模式还是插入模式
+set showcmd	            "命令模式下，在底部显示当前键入的指令
+set mouse=a	            "支持使用鼠标
+set encoding=utf-8
+set autoindent          "按下回车键后，下一行的缩进会自动和上一行保持一致
+set tabstop=4           "tab键显示的空格数
+set shiftwidth=4        "按&gt;&gt;或&lt;&lt;或==调整缩进时,每一级的字符数
+set expandtab           "自动将tab转为空格
+</p>
+
+<p>
+set cursorline           "光标所在当前行高亮
+</p>
+
+
+<div id="vim使用与配置-安装插件"><h2 id="安装插件" class="header"><a href="#vim使用与配置-安装插件">安装插件</a></h2></div>
+<p>
+:PluginInstall
+</p>
+
+<div id="vim使用与配置-vim主题"><h2 id="vim主题" class="header"><a href="#vim使用与配置-vim主题">vim主题</a></h2></div>
+<p>
+<a href="https://github.com/flazz/vim-colorschemes/tree/master/colors">vim-colorschemes/colors</a>
+</p>
+
+</div>
+
+<hr class="comment">
+<section class="comment">
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'lotaboutvimwiki'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+    <script src="./js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $('pre').addClass('prettyprint linenums') 
+        prettyPrint()})
+    </script>
+    <script src="./google-code-prettify/prettify.js"></script>
+
+    <!--script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML-full"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML-full&latest"></script>
+</body>
+</html>

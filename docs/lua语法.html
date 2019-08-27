@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>chapter2 Indexing for High Performance</title>
+    <title>lua语法</title>
     <link rel="Stylesheet" type="text/css" href="./css/style.css" />
     <link rel="stylesheet" type="text/css" href="./google-code-prettify/prettify.css" >
     <!-- add more style sheets and javascripts -->
@@ -12,16 +12,21 @@
 
 <div class="content">
 
-<div id="Indexing for High Performance"><h1 id="Indexing for High Performance" class="header"><a href="#Indexing for High Performance">Indexing for High Performance</a></h1></div>
+<div id="lua 奇特的语法"><h1 id="lua 奇特的语法" class="header"><a href="#lua 奇特的语法">lua 奇特的语法</a></h1></div>
+<ul>
+<li>
+下标从1开始
 
-<p>
-Creating truly optimal indexes will ofter require you to rewrite queries.
-</p>
+<li>
+变量默认是全局的，用local声明才是局部的，定义在函数中的全局变量要在函数执行后才生效
 
-<div id="Indexing for High Performance-Indexing Basics"><h2 id="Indexing Basics" class="header"><a href="#Indexing for High Performance-Indexing Basics">Indexing Basics</a></h2></div>
-<p>
-If you index more than one column, the column order is very important, because MySQL can only search efficiently on a leftmost prefix of the index. Creating an index on two columns is not the same as creating two separate single-column indexes.
-</p>
+<li>
+local 函数使用要在声明之前， 全局函数不需
+
+<li>
+for循环里面的变量默认是local的？
+
+</ul>
 
 </div>
 

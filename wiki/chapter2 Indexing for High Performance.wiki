@@ -1,7 +1,0 @@
-= Indexing for High Performance =
-
-Creating truly optimal indexes will ofter require you to rewrite queries.
-
-== Indexing Basics ==
-If you index more than one column, the column order is very important, because MySQL can only search efficiently on a leftmost prefix of the index. Creating an index on two columns is not the same as creating two separate single-column indexes.
-

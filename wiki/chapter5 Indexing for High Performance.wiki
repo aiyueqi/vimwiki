@@ -1,0 +1,45 @@
+= Indexing for High Performance =
+
+Creating truly optimal indexes will ofter require you to rewrite queries.
+
+== Indexing Basics ==
+If you index more than one column, the column order is very important, because MySQL can only search efficiently on a leftmost prefix of the index. Creating an index on two columns is not the same as creating two separate single-column indexes.
+
+== Type of indexes ==
+Indexes are implemented in the storage engine layer, not the server layer.
+
+=== B-Tree indexes ===
+Storage engines may use different indexs. InnoDB uses B+Trees.
+
+1. MyISAM
+    - uses a prefix compression technique that makes indexes smaller.
+    - indexes refer to the indexed rows by their physical storage locations
+2. InnoDB
+    - leaves valuse uncompressed in its indexs
+    - indexes refer to the indexed rows by their primary key values
+B+Tree structure
+{{../docs/images/mysql2.png}}
+
+==== Types of queries that can use a B-Tree index ====
+- Match the full value
+- Match a leftmost prefix
+- Match a column prefix
+- Match a range of values
+- Match one part exactly and match a range on another part
+- Index-only queries
+
+limitations of B-Tree indexes:
+- Not useful if the lookup does not start from the leftmost side of the indexed columns.
+- You can't skip columns in the index
+- The storage engine can't optimize accesses with any columns to the right of the first range condition.
+
+The column order is extremely important.
+==== Hash indexs ====
+A hash index is built on a hash table and is useful only for exact lookups that use every column in the index.
+In MySQL only the Memory storage engine supports explicit hash indexes.
+
+==== Benefits of Indexes ====
+1. Indexes reduce the amount of data the server has to examine
+2. Indexes help the serve avoid sorting and temporary tables
+3. Indexes turn random I/O into sequential I/O
+

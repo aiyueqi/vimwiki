@@ -1,0 +1,52 @@
+= vim使用与配置 =
+== 使用 ==
+[[https://wiki.jikexueyuan.com/project/learn-linux-step-by-step/vim-and-vi-common-commands.html|vim 与 vi 常用命令 - 一步一步学 Linux - 极客学院Wiki]]
+
+替换
+:1,$s/word1/word2/gc
+
+复制一个单词
+光标移到想要被复制词的词首，输入yw
+单词任意位置 yaw
+
+删除一个单词 
+光标移到想要被复制词的词首，输入dw
+单词任意位置 daw
+
+=== 分屏 ===
+
+
+== Vundle配置 ==
+" Vundle Settings
+set nocompatible              " be iMproved, required
+filetype off                  " required
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'scrooloose/nerdtree.git'
+
+" All of your Plugins must be added before the following line
+call vundle#end()              "required
+
+== 基本配置 ==
+set nocompatible
+filetype plugin on
+syntax on               "语法高亮
+set number              "显示行号
+set showmode            "在底部显示处于命令模式还是插入模式
+set showcmd	            "命令模式下，在底部显示当前键入的指令
+set mouse=a	            "支持使用鼠标
+set encoding=utf-8
+set autoindent          "按下回车键后，下一行的缩进会自动和上一行保持一致
+set tabstop=4           "tab键显示的空格数
+set shiftwidth=4        "按>>或<<或==调整缩进时,每一级的字符数
+set expandtab           "自动将tab转为空格
+
+set cursorline           "光标所在当前行高亮
+
+
+== 安装插件 ==
+:PluginInstall
+
+== vim主题 ==
+[[https://github.com/flazz/vim-colorschemes/tree/master/colors|vim-colorschemes/colors]]
