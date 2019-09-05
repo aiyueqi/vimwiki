@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>最长有效括号</title>
+    <link rel="Stylesheet" type="text/css" href="./css/style.css" />
+    <link rel="stylesheet" type="text/css" href="./google-code-prettify/prettify.css" >
+    <!-- add more style sheets and javascripts -->
+</head>
+<body>
+<!--<body onload="prettyPrint()">-->
+
+<div class="content">
+
+<div id="32最长有效括号"><h1 id="32最长有效括号" class="header"><a href="#32最长有效括号">32最长有效括号</a></h1></div>
+
+<p>
+由于题中只有"(", ")"两种输入，考虑到嵌套括号的情况，想到用栈：
+如果是"("就入栈，如果是")"就出栈，下面加一些具体规则
+</p>
+
+<p>
+解决了"(())"这种情况，但是失配的情况很难处理，如：
+"()()", "())()", "()(()":
+第一种匹配到就累加没问题
+</p>
+
+<p>
+第二种需要加一条规则：出栈时发现栈空了就重新计数
+</p>
+
+<p>
+第三种比较难处理，我们尝试为左括号失配加规则，比较"()(()"和"()(())"，由于左括号是否有效要看最后是否存在有效的右括号，规则比较难加。
+</p>
+
+<p>
+然后我就放弃栈，改用循环处理下标了。
+</p>
+
+<div id="32最长有效括号-解法一：循环"><h2 id="解法一：循环" class="header"><a href="#32最长有效括号-解法一：循环">解法一：循环</a></h2></div>
+<p>
+先总结下用循环处理下标的解法：
+维护一个数组A，存储以当前括号为结尾的最长有效括号长度。
+遍历存储括号的字符串s，如果s[i]="("，A[i]=0; 否则读取A[i-1]的值，
+</p>
+<ol>
+<li>
+考虑嵌套情况：跳过过已经成功匹配的括号，index=A[i-1-A[i-1]]是此右括号该匹配的下标，如果s[index]='('即成功匹配，A[i] = A[i-1]+2 （这里有下标越界的情况编码时需要处理，这里不讨论）
+
+<li>
+考虑相邻情况：如"()(())"，最后一位成功匹配后，长度需要加上相邻括号的长度，即如果s[index]成功匹配，需要加上s[index-1]的长度
+
+<li>
+以上两条规则，对于s[i]='('的情况，和失配的情况，A[i]=0，都满足，因此不需做特殊处理
+
+</ol>
+
+<p>
+代码如下：
+</p>
+<pre python>
+class Solution:
+    def longestValidParentheses(self, s: str) -&gt; int:
+        length = len(s)
+        A = [0] * length
+        for i in range(1, length):
+            if s[i] == '(':
+                continue
+
+            index = i-1-A[i-1]
+            if index &lt; 0 or s[index] != '(':
+                A[i] = 0
+                continue
+
+            A[i] = A[i-1] + 2
+
+            if index-1 &gt;= 0:
+                A[i] = A[i] + A[index-1]
+
+        result = 0
+        for i in range(0, length):
+            result = max(result, A[i])
+
+        return result
+</pre>
+
+<p>
+解法二：用栈
+对比两种方法，如果能用栈存储下标的话，省去了手动移动下标的麻烦
+对于失配的情况，只要重新计数就ok
+leetcode的解答中有一个很巧妙的方法，栈里面存放的是")"的下标，遇到"("就入栈，遇到")"就出栈；巧妙的地方在于：在栈底永远保留一个失配元素的下标
+在栈底永远保留一个元素，初始化为某个值，s[i]=')'，出栈之后栈为空，即栈底元素被出栈，意味着发生了失配，此时把i入栈作为新的栈底元素，当前以i结尾的最长有效括号长度是i-stack[-1]
+总结一下意义：
+</p>
+<ul>
+<li>
+栈底元素：失配元素的下标
+
+<li>
+栈顶元素：目前还未成功匹配，下一个可能成功匹配的左括号下标（不包括栈底元素）
+
+<li>
+当前元素下标-栈顶元素下标：以当前元素为结尾的最长有效括号长度
+
+</ul>
+
+<p>
+代码如下：
+</p>
+<pre python>
+class Solution:
+    def longestValidParentheses(self, s: str) -&gt; int:
+        if not s:
+            return 0
+        res = 0
+        stack = [-1]
+        for i in range(len(s)):
+            if s[i] == "(":
+                stack.append(i)
+            else:
+                stack.pop()
+                if not stack:
+                    stack.append(i)
+                else:
+                    res = max(res,i - stack[-1])
+        return res
+</pre>
+
+</div>
+
+<hr class="comment">
+<section class="comment">
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'lotaboutvimwiki'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+    <script src="./js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $('pre').addClass('prettyprint linenums') 
+        prettyPrint()})
+    </script>
+    <script src="./google-code-prettify/prettify.js"></script>
+
+    <!--script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML-full"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML-full&latest"></script>
+</body>
+</html>

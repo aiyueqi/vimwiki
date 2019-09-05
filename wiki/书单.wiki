@@ -1,3 +1,6 @@
 书单
+下载英文书的网站
+http://libgen.is/
 高性能mysql 1,4,5,6
 database internals
+
