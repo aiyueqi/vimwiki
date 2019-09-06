@@ -1,6 +1,7 @@
 书单
-下载英文书的网站
-http://libgen.is/
+下载英文书的网站  http://libgen.is/
+据说会被封，换域名，搜这个 library genesis
+
 高性能mysql 1,4,5,6
 database internals
 
