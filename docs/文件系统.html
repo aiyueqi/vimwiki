@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>文件系统</title>
+    <link rel="Stylesheet" type="text/css" href="./css/style.css" />
+    <link rel="stylesheet" type="text/css" href="./google-code-prettify/prettify.css" >
+    <!-- add more style sheets and javascripts -->
+</head>
+<body>
+<!--<body onload="prettyPrint()">-->
+
+<div class="content">
+
+<div id="文件系统"><h1 id="文件系统" class="header"><a href="#文件系统">文件系统</a></h1></div>
+<div id="文件系统-文件"><h2 id="文件" class="header"><a href="#文件系统-文件">文件</a></h2></div>
+<p>
+一种抽象机制，提供一种在磁盘上保留信息而且方便以后读取的方法。使用户不需要了解存储信息的方法、位置和十几次盘工作方式等有关细节
+</p>
+
+<div id="文件系统-文件-文件命名"><h3 id="文件命名" class="header"><a href="#文件系统-文件-文件命名">文件命名</a></h3></div>
+<p>
+文件的具体命名规则在各个系统中不同，所有现代操作系统都允许用1~8个字母组成的字符串作为合法的文件名
+扩展名用圆点.分隔
+</p>
+
+<div id="文件系统-文件-文件结构"><h3 id="文件结构" class="header"><a href="#文件系统-文件-文件结构">文件结构</a></h3></div>
+<p>
+常用的三种构造方式
+<img src="../wiki/images/filesystem1.png" />
+</p>
+<ol>
+<li>
+字节序列：把文件看成字节序列为操作系统提供了最大的灵活性，用户程序可以向文件中家人任何内容，并以任何方便的形式命名。所有UNIX、MS-DOS及Windows都采用这种文件模型。
+
+<li>
+记录序列：文件是具有固定长度记录的序列，每个记录都有其内部结构。几十年前，为了适应行式打印机，固定有132列宽，如今已经不用了
+
+<li>
+树：文件有一棵记录树构成，每个记录并不具有同样的长度，而记录的固定位置上有一个key字段，这棵树按key字段进行排序，从而可以对特定key进行快速查找
+
+</ol>
+
+<div id="文件系统-文件-文件类型"><h3 id="文件类型" class="header"><a href="#文件系统-文件-文件类型">文件类型</a></h3></div>
+<ul>
+<li>
+普通文件：包含用户的信息
+
+<ul>
+<li>
+ASCII文件：由多行正文组成，方便显示、打印和编辑
+
+<li>
+二进制文件：有一定的内部结构，打印出来无法理解，给操作系统执行
+
+</ul>
+<li>
+目录：管理文件系统结构的系统文件
+
+<li>
+UNIX中还有字符特殊文件和块特殊文件
+
+</ul>
+
+<div id="文件系统-文件-文件存取"><h3 id="文件存取" class="header"><a href="#文件系统-文件-文件存取">文件存取</a></h3></div>
+<ul>
+<li>
+顺序存取：早期存储介质是磁带时使用
+
+<li>
+随机存取：存储介质是磁盘时，可以以任何次序读取其中字节或记录
+
+</ul>
+
+<div id="文件系统-文件-文件属性"><h3 id="文件属性" class="header"><a href="#文件系统-文件-文件属性">文件属性</a></h3></div>
+<ul>
+<li>
+文件属性（元数据）：文件相关的信息，如创建日期，文件大小等
+
+</ul>
+
+<div id="文件系统-文件-文件操作"><h3 id="文件操作" class="header"><a href="#文件系统-文件-文件操作">文件操作</a></h3></div>
+<p>
+对于文件的存储和检索，不同系统提供了不同操作，以下是常用的系统调用
+</p>
+<ol>
+<li>
+create 创建文件，并设置文件的一些属性
+
+<li>
+delete 删除文件
+
+<li>
+open 使用文件前，必须先打开文件，open调用把文件属性和磁盘地址表装入内存，便于后续调用的快速存取
+
+<li>
+close 存取结束后，不再需要文件属性和磁盘地址，close调用关闭文件以释放内部表空间，磁盘以块为单位写入，关闭文件时，写入该文件的最后一块，即使这个块还没有满
+
+<li>
+read 在文件中读取数据，一般独处数据来自文件的当前位置，调用者需指明要读取的数据，并提供存放这些数据的缓冲区
+
+<li>
+write 向文件写数据，一般从文件当前位置开始，如果是文件末尾，文件长度增加，如果在文件中间，现有数据被覆盖，并且永远丢失
+
+<li>
+append write的限制形式，只能在文件末尾加数据
+
+<li>
+seek 对于随机存取文件，seek把当前位置指针指向文件中特定位置，sekk调用结束后，就可以从该位置开始读写数据
+
+<li>
+get attributes 读取文件属性
+
+<li>
+set attributes 设置文件属性
+
+<li>
+rename 重命名
+
+</ol>
+
+<div id="文件系统-目录"><h2 id="目录" class="header"><a href="#文件系统-目录">目录</a></h2></div>
+<div id="文件系统-目录-单层目录系统"><h3 id="单层目录系统" class="header"><a href="#文件系统-目录-单层目录系统">单层目录系统</a></h3></div>
+<p>
+只有一个目录，已废弃
+</p>
+
+<div id="文件系统-目录-层次目录系统"><h3 id="层次目录系统" class="header"><a href="#文件系统-目录-层次目录系统">层次目录系统</a></h3></div>
+<p>
+一个目录树，用户可以创建任意数量的子目录，几乎所有现代文件系统都是用这个方式组织的
+<img src="../wiki/images/filesystem2.png" />
+</p>
+
+<div id="文件系统-目录-路径名"><h3 id="路径名" class="header"><a href="#文件系统-目录-路径名">路径名</a></h3></div>
+<div id="文件系统-目录-路径名-绝对路径"><h4 id="绝对路径" class="header"><a href="#文件系统-目录-路径名-绝对路径">绝对路径</a></h4></div>
+<p>
+由根目录到文件的路径组成
+</p>
+
+<div id="文件系统-目录-路径名-相对路径"><h4 id="相对路径" class="header"><a href="#文件系统-目录-路径名-相对路径">相对路径</a></h4></div>
+<p>
+和工作目录（也称当前目录）一起使用
+</p>
+
+<div id="文件系统-目录-目录操作"><h3 id="目录操作" class="header"><a href="#文件系统-目录-目录操作">目录操作</a></h3></div>
+<ol>
+<li>
+create 创建目录
+
+<li>
+delete 删除目录
+
+<li>
+opendir 目录内容可被读取，eg列出目录中全部文件，程序必须先打开该目录，然后读其中全部文件的文件名
+
+<li>
+closedir 读目录结束后，关闭目录以释放内部表空间
+
+<li>
+redaddir 返回打开目录的下一个目录项
+
+<li>
+rename 重命名
+
+<li>
+link 连接技术允许在多个目录中出现同一个文件，制定一个存在的文件和一个路径名，建立从该文件到路径所指名字的连接（硬连接hard link）。增加了该文件的i-node计数器的计数（记录含有该文件的目录项数目）
+
+<li>
+unlink 删除目录项。如果被解除连接的文件只出现在一个目录中，则将它从文件系统删除，如果出现在多个目录中，则只删除制定路径名的连接。delete系统调用实际上就是unlink
+
+</ol>
+
+<div id="文件系统-文件系统的实现"><h2 id="文件系统的实现" class="header"><a href="#文件系统-文件系统的实现">文件系统的实现</a></h2></div>
+<div id="文件系统-文件系统的实现-文件系统布局"><h3 id="文件系统布局" class="header"><a href="#文件系统-文件系统的实现-文件系统布局">文件系统布局</a></h3></div>
+<p>
+文件系统存放在磁盘上，划分为一个或多个分区，每个分区有一个独立的文件系统。
+</p>
+
+<ul>
+<li>
+主引导记录：Master Boot Record，MBR 磁盘的0号扇区，用来引导计算机
+
+<li>
+分区表：MBR的结尾，给出了每个分区的起始和结束地址
+
+</ul>
+
+<p>
+在计算机被引导时，BIOS读入并执行MBR。MBR确定活动分区，读入它的第一个块，称为引导块，并执行。引导块中的程序将装载该分区中的操作系统，即使它不含有一个可启动的操作系统
+</p>
+
+<p>
+文件系统布局
+<img src="../wiki/image/filesystem3.png" />
+其中超级块包含文件系统的所有关键参数，空闲块可以用位图或指针列表的形式给出
+</p>
+
+<div id="文件系统-文件系统的实现-文件的实现"><h3 id="文件的实现" class="header"><a href="#文件系统-文件系统的实现-文件的实现">文件的实现</a></h3></div>
+<ol>
+<li>
+连续分配：随机存取快，但有磁盘碎片
+
+<li>
+链表分配：磁盘利用率高，但随机存取太慢
+
+<li>
+在内存中采用表的链表分配：取出每个磁盘块的指针字放在内存的一个表中，缺点是对于大磁盘占用过多内存
+
+<li>
+i节点：为每个文件赋予一个称为index-node的数据结构，列出了文件属性和文件块的磁盘地址。只有在对应文件打开时，其i节点才在内存中
+
+</ol>
+
+</div>
+
+<hr class="comment">
+<section class="comment">
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'lotaboutvimwiki'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+   
+</section>
+
+    <script src="./js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $('pre').addClass('prettyprint linenums') 
+        prettyPrint()})
+    </script>
+    <script src="./google-code-prettify/prettify.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML-full"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML-full&latest"></script>
+
+</body>
+</html>
