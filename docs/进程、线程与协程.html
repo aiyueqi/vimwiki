@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>进程、线程与协程</title>
+    <link rel="Stylesheet" type="text/css" href="./css/style.css" />
+    <link rel="stylesheet" type="text/css" href="./google-code-prettify/prettify.css" >
+    <!-- add more style sheets and javascripts -->
+</head>
+<body>
+<!--<body onload="prettyPrint()">-->
+
+<div class="content">
+
+<div id="进程"><h2 id="进程" class="header"><a href="#进程">进程</a></h2></div>
+<p>
+对正在运行程序的一个抽象
+</p>
+
+<p>
+每个进程有一个地址空间和一个控制线程
+</p>
+
+<p>
+资源管理的单位
+</p>
+<div id="进程-进程的三种状态"><h3 id="进程的三种状态" class="header"><a href="#进程-进程的三种状态">进程的三种状态</a></h3></div>
+<ol>
+<li>
+运行态
+
+<li>
+就绪态
+
+<li>
+阻塞态
+
+</ol>
+
+<div id="线程"><h2 id="线程" class="header"><a href="#线程">线程</a></h2></div>
+<p>
+同一个进程中的不同线程有完全一样的地址空间, 有共享的堆和私有的栈空间
+</p>
+
+<p>
+轻量级
+</p>
+
+<p>
+CPU调度的最小单位
+</p>
+
+<div id="线程-在用户空间中实现线程"><h3 id="在用户空间中实现线程" class="header"><a href="#线程-在用户空间中实现线程">在用户空间中实现线程</a></h3></div>
+<p>
+多线程由函数库实现, 对操作系统不可见
+</p>
+<ol>
+<li>
+优点：
+
+<ul>
+<li>
+线程切换快
+
+<li>
+可扩展性强
+
+</ul>
+<li>
+缺点：
+
+<ul>
+<li>
+不易实现阻塞系统调用
+
+<li>
+没有时钟中断，所以不可能用轮转调度的方法调度线程,如果一个线程开始运行，那么在该进程中的其他线程就不能运行，除非第一个线程自动放弃CPU
+
+</ul>
+</ol>
+
+<div id="线程-在内核中实现线程"><h3 id="在内核中实现线程" class="header"><a href="#线程-在内核中实现线程">在内核中实现线程</a></h3></div>
+<p>
+多线程的支持由操作系统实现
+内核的线程表保存了每个线程的寄存器、状态和其他信息。
+</p>
+<ol>
+<li>
+优点:
+
+<ul>
+<li>
+所有能够阻塞线程的调用都以系统调用的形式实现，当一个线程阻塞时，内核根据其选择，可以运行同一个进程中的另一个线程或者另一个进程中的线程。而在用户级线程中，运行时系统时钟运行自己进程中的线程，知道内核剥夺他的CPU为止
+
+</ul>
+<li>
+缺点：
+
+<ul>
+<li>
+陷入内核态系统调用的开销比较大
+
+</ul>
+</ol>
+
+<div id="线程-混合实现"><h3 id="混合实现" class="header"><a href="#线程-混合实现">混合实现</a></h3></div>
+
+
+<div id="协程"><h2 id="协程" class="header"><a href="#协程">协程</a></h2></div>
+
+<p>
+要处理上述的两个问题：
+</p>
+<ol>
+<li>
+遇到阻塞式I\O会导致整个进程被挂起
+
+<li>
+由于缺乏时钟阻塞，进程需要自己拥有调度线程的能力
+
+</ol>
+
+<p>
+如果一种实现使得每个线程需要自己通过调用某个方法，主动交出控制权，那么我们就称这种用户态线程是协作式的，即协程
+</p>
+
+<p>
+协程大致可以理解为：用户态实现的线程
+</p>
+
+<p>
+线程和协程最大的区别就是是否依赖CPU时钟发出的中断来调度
+</p>
+
+<p>
+多进程+协程实现多核调用, 实际上一个进程中同时只有一个协程在执行，即协程其实是单线程执行的
+</p>
+
+</div>
+
+<hr class="comment">
+<section class="comment">
+<div id="disqus_thread"></div>
+    <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'lotaboutvimwiki'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</section>
+
+   
+</section>
+
+    <script src="./js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+        $('pre').addClass('prettyprint linenums') 
+        prettyPrint()})
+    </script>
+    <script src="./google-code-prettify/prettify.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML-full"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML-full&latest"></script>
+
+</body>
+</html>
