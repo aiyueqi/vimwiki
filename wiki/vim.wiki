@@ -14,7 +14,21 @@
 单词任意位置 daw
 
 === 分屏 ===
+命令行分屏
+vim -o2 file1 file2 水平分屏
+vim -O2 file1 file2 垂直分屏
 
+编辑中分屏
+ctrl+w v左右分割当前文件
+ctrl+w s上下分割当前文件
+:sp filename 上下分割，并打开新的文件
+:vsp filename 左右分割，并打开一个新的文件
+
+分屏编辑中光标的移动
+ctrl+w kjlhw
+
+移动分屏
+ctrl+w KJLH
 
 == Vundle配置 ==
 " Vundle Settings
