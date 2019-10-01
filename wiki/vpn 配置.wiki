@@ -1,0 +1,8 @@
+https://suchenrain.github.io/en/posts/37388/ (教程有些啰嗦，仅供参考)
+申请地址： https://cloud.google.com/free/?hl=zh-cn
+
+plus:
+1. 配置防火墙
+2. 生成ssh-key
+3. 配置静态ip
+4. 安装vpn软件 https://github.com/hwdsl2/setup-ipsec-vpn/blob/master/README-zh.md
