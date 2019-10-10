@@ -47,9 +47,12 @@ ACID:
 The SQL standard defines four isolation levels, with specific rules for which changes are and aren't visible inside and outside a transaction.Lower isolation levels typically allow higher concurrency and have lower overhead.
 
 TODO 四种隔离级别的理解
-- read uncommitted: transactions can view the results of other uncommitted treansactions. Rarely used in practice. Also known as a *dirty read*
-- read committed: the default isolation level for most database but not MySQL. A transaction will see only those changes made by tansactions that were already committed when it began, and its changes won't be visible to others until it has committed. Also known as a *nonrepeatable read*. This means you can run the same statement twice and see different data.
+- read uncommitted: transactions can view the results of other uncommitted transactions. Rarely used in practice. Also known as a *dirty read*
+不加锁
+- read committed: the default isolation level for most database but not MySQL. A transaction will see only those changes made by transactions that were already committed when it began, and its changes won't be visible to others until it has committed. Also known as a *nonrepeatable read*. This means you can run the same statement twice and see different data.
+一个事务开始时，其他事务可以修改相关行
 - repeatable read: MySQL's default transaction iolation level.It guarantees that any rows a transaction reads will "look the same" in subsequent reads within the same transaction.But phantom reads can happen: when another transaction inserts a new row into the range, then you select the same range again; you will then see the new "phantom" row.InnoDB solve the phantom read problem with multiversion concurrentcy control.
+一个事务开始时，锁住那些已存在的相关的行，但不锁新插入的行
 - serializable: solves the phantom read problem by forcing transactions to be ordered. 
 
 == Deadlocks ==
