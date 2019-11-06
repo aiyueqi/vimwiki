@@ -6,3 +6,9 @@ plus:
 2. 生成ssh-key
 3. 配置静态ip
 4. 安装vpn软件 https://github.com/hwdsl2/setup-ipsec-vpn/blob/master/README-zh.md
+
+vpn配置
+Server IP: 35.194.175.230
+IPsec PSK: bFfpmiHSW8XZzXHKMJFk
+Username: vpnuser
+Password: Ekjvp9ecCipZk9Hk
