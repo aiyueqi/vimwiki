@@ -1,0 +1,11 @@
+- [ ] java
+    - [ ] ArrayList扩容
+    - [ ] HashTable如果保证线程安全
+    - [ ] HashMap底层实现
+    - [ ] java热部署
+- [ ] spring
+    - [ ] bean生命周期
+    - [ ] 几种注入方式
+- [ ] mysql
+    - [ ] 存储引擎的数据结构
+    - [ ] 乐观锁，悲观锁

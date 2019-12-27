@@ -1,0 +1,53 @@
+== spring aop理解 ==
+https://blog.csdn.net/qukaiwei/article/details/50367761
+
+== java反射 ==
+通过反射，我们可以在运行时获得程序或程序集中每一个类型的成员和成员的信息
+https://www.sczyh30.com/posts/Java/java-reflection-1/
+应用：ide自动补全，spring配置化bean动态加载类
+
+== AOP增强的5种方式 ==
+- 前置增强（org.springframework.aop.BeforeAdvice）：在目标方法执行之前进行增强；
+- 后置增强（org.springframework.aop.AfterReturningAdvice）：在目标方法执行之后进行增强；
+- 环绕增强（org.aopalliance.intercept.MethodInterceptor）：在目标方法执行前后都执行增强；
+- 异常抛出增强（org.springframework.aop.ThrowsAdvice）：在目标方法抛出异常后执行增强；
+- 引介增强（org.springframework.aop.IntroductionInterceptor）：为目标类添加新的方法和属性。
+
+声明式事务的实现就是通过环绕增强的方式
+
+== 事务分类 ==
+https://zhuanlan.zhihu.com/p/54067384
+刚性事务：严格遵循ACID
+柔性事务：期望最终一致性，在事务执行的中间状态允许暂时不遵循ACID属性的事务称为柔性事务,涉及到分布式事务方案 https://www.jianshu.com/p/ab1a1c6b08a1
+
+=== 四种隔离级别 ===
+=== 七种事务传播机制 ===
+针对方法嵌套调用时事务的创建行为
+
+=== 本地事务与分布式事务（全局事务） ===
+- 本地事务：数据库能实现本地事务，也就是在同一个数据库中，你可以允许一组操作要么全都正确执行，要么全都不执行。
+
+- 分布式事务：微服务架构，一个大型业务系统往往由若干个子系统构成，这些子系统又拥有各自独立的数据库，需要实现支持跨数据库的事务支持 https://zhuanlan.zhihu.com/p/33639067
+
+=== spring事务 ===
+事务抽象的核心接口为PlatformTransactionManager
+它负责管理事务行为，包括事务的获取、提交和回滚。在invokeWithinTransaction方法中，我们可以看到createTransactionIfNecessary、commitTransactionAfterReturning和completeTransactionAfterThrowing都是针对该接口编程，并不依赖于特定事务管理器
+https://zhuanlan.zhihu.com/p/54067384
+
+=== tcc ===
+tcc:try, confirm, cancel
+https://yq.aliyun.com/articles/609854?utm_content=m_1000005852
+tcc服务实现注意事项：
+- 要保证第一阶段Try操作成功之后，二阶段Confirm操作一定能成功
+- 允许空回滚
+- 放悬挂控制，拒绝执行空回滚之后到来的一阶段Try请求
+- 幂等控制
+- 业务数据可见性控制
+- 业务数据并发访问控制
+- 
+=== tcc博客，以及可靠消息服务 ===
+https://www.cnblogs.com/jajian/p/10014145.html
+
+=== lambda延迟执行 ===
+用于打印日志
+https://blog.csdn.net/u011794238/article/details/49994913
