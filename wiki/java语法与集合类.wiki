@@ -2,3 +2,10 @@
 == [[内部类]] ==
 == [[lambda表达式]] ==
 == [[java Integer缓存策略]] ==
+== [[transient]] ==
+== [[jdk8 接口增强]] ==
+
+= HashMap源码 =
+https://blog.csdn.net/zxt0601/article/details/77413921
+= ConcurrentHashMap =
+https://www.cnblogs.com/everSeeker/p/5601861.html

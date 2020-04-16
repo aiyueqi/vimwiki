@@ -7,3 +7,14 @@ database internals
 
 电子书网站
 https://epdf.pub
+
+== docker ==
+https://hijiangtao.github.io/2018/04/17/Docker-in-Action/
+https://legacy.gitbook.com/book/yeasy/docker_practice/details
+https://docs.docker.com/get-started/
+第一个比较简短，第二个是我看下来最靠谱的教程，第三个是官方文档。教程说不到的细节，可以去官方文档查
+了解的话，第一个配合第二个就够了
+
+rpc框架demo--王争
+https://github.com/wangzheng0822/codedesign/tree/master/com/xzg/cd/rpc
+实际上，RPC 框架也可以看作一种代理模式，GoF 的《设计模式》一书中把它称作远程代理。通过远程代理，将网络通信、数据编解码等细节隐藏起来。客户端在使用 RPC 服务的时候，就像使用本地函数一样，无需了解跟服务器交互的细节。除此之外，RPC 服务的开发者也只需要开发业务逻辑，就像开发本地使用的函数一样，不需要关注跟客户端的交互细节。关于远程代理的代码示例，我自己实现了一个简单的 RPC 框架 Demo，放到了 GitHub 中，你可以点击这里的链接查看。

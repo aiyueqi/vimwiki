@@ -1,4 +1,19 @@
-嵌套事务
+= 嵌套事务 =
 阻塞队列
 
 [[tmp java code]]
+
+https://www.zhihu.com/question/41922036
+https://www.zhihu.com/question/37028283
+https://www.jianshu.com/p/ab1a1c6b08a1
+https://fangjian0423.github.io/2016/03/12/java-Object-method/
+https://www.jianshu.com/p/9b67ab434795
+https://www.cnblogs.com/liujiayun/p/5912628.html
+https://www.jianshu.com/p/8b95db8d7a1f
+https://blog.csdn.net/shadow_zed/article/details/72566611
+https://blog.csdn.net/zxt0601/article/list/1
+https://blog.csdn.net/zxt0601/article/details/77413921
+https://blog.csdn.net/chenjie19891104/article/details/42807959
+https://blog.csdn.net/sun_promise/article/details/51220518
+
+
