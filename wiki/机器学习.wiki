@@ -53,5 +53,13 @@ f(θ) = 0
 2. 缺点：每一次迭代，都要重新计算一次Hession矩阵(n*n的矩阵, n:特征的数量)的逆
 
 == 广义线性模型 ==
+GLM: generalized linear models
 === 指数分布族 ===
 伯努利分布和高斯分布式指数分布族的特例
+
+== softmax regression ==
+softmax 回归 logistic回归的推广，处理k类分类问题
+logistic回归 处理只有两种取值的分类问题
+
+== 判别学习算法 ==
+== 生成学习算法 ==

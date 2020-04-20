@@ -1,1 +1,64 @@
 Chapter 6. Task Execution
+
+6.1.Sequential Web Server
+{{{java
+    class SingleThreadWebServer {
+        public static void main(String[] args) throw IOException {
+            ServerSocket socket = new ServerSocket(80);
+            while(true) {
+                Socket connection = socket.accept();
+                handleRequest(connection);
+            }
+        }
+    }
+}}}
+
+ 6.2. Web Server that Starts a New Thread for Each Request 
+ {{{java
+ class ThreadPerTaskWebServer {
+    public static void main(String[] args) throws IOException {
+        ServerSocket socket = new ServerSocket(80);
+        while (true) {
+            final  Socket connection = socket.accept();
+            Runnable task = new Runnable() {
+                public void run() {
+                    handleRequest(connection);
+                } 
+            };
+            new Thread(task).start();
+        }
+    } 
+}
+}}}
+
+6.3. Executor Interface
+{{{java 
+public interface Executor {
+    void execute(Runnable command);
+}
+}}}
+
+6.4. Web Server Using a Thread Pool 
+{{{java
+class TaskExecutionWebServer {
+    private static final int NTHREADS = 100;
+    private static final Executor exec = Executors.newFixedThreadPool(NTHREADS);
+    public static void main(String[] args) throws IOException {
+        ServerSocket socket = new ServerSocket(80);
+        while (true) {
+            final Socket connection = socket.accept();
+            Runnable task = new Runnable() {
+                public void run() {
+                handleRequest(connection);
+            }
+        };
+        exec.execute(task);
+    } 
+}
+}}}
+
+== thread pools ==
+A thread pool, as its name suggests, manages a homogeneous pool of worker threads. A thread pool is tightly bound to  a  work  queue  holding  tasks  waiting  to  be  executed.  Worker  threads  have  a  simple  life:  request  the  next  task  from  the  work queue, execute it, and go back to waiting for another task. 
+
+Executing  tasks  in  pool  threads  has  a  number  of  advantages  over  the  thread per task  approach.  Reusing  an  existing  thread instead of creating a new one amortizes thread creation and teardown costs over multiple requests. As an added  bonus,  since  the  worker  thread  often  already  exists  at  the  time  the  request  arrives,  the  latency  associated  with  thread  creation  does  not  delay  task  execution,  thus  improving  responsiveness.  By  properly  tuning  the  size  of  the  thread  pool,  you  can  have  enough  threads  to  keep  the  processors  busy  while  not  having  so  many  that  your  application  runs  out  of  memory or thrashes due to competition among threads for resources. 
+
