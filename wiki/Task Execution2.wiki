@@ -1,0 +1,50 @@
+== Advantages of pool threads ==
+Executing  tasks  in  pool  threads  has  a  number  of  advantages  over  the  thread per task  approach.  Reusing  an  existing  thread instead of creating a new one amortizes thread creation and teardown costs over multiple requests. As an added  bonus,  since  the  worker  thread  often  already  exists  at  the  time  the  request  arrives,  the  latency  associated  with  thread  creation  does  not  delay  task  execution,  thus  improving  responsiveness.  By  properly  tuning  the  size  of  the  thread  pool,  you  can  have  enough  threads  to  keep  the  processors  busy  while  not  having  so  many  that  your  application  runs  out  of  memory or thrashes due to competition among threads for resources.
+
+== Executor Process ==
+The web server in TaskExecutionWebServer uses an Executor with a bounded pool of worker threads. Submitting a  task with execute adds the task to the work queue, and the worker threads repeatedly dequeue tasks from the work  queue and execute them. 
+
+== Lifecycle Methodes in ExecutorService ==
+{{{java
+public interface ExecutorService extends Executor {
+    void shutdown();
+    List<Runnable> shutdownNow();
+    boolean isShutdown();
+    boolean isTerminated();
+    boolean awaitTermination(long timeout, TimeUnit unit)
+        throws InterruptedException;
+    //  ... additional convenience methods for task submission
+}
+}}}
+The  lifecycle  implied  by  ExecutorService  has  three  states     running,  shutting  down,  and  terminated.  ExecutorServices  are  initially  created  in  the  running  state.  The  shutdown  method  initiates  a  graceful  shutdown:  no  new  tasks  are  accepted  but  previously  submitted  tasks  are  allowed  to  complete     including  those  that  have  not  yet  begun execution. The shutdownNow method initiates an abrupt shutdown: it attempts to cancel outstanding tasks and  does not start any tasks that are queued but not begun. 
+
+== Lifecycle of a task executed by an Executor ==
+Four phases: created, submitted, started, completed.
+Since  tasks  can  take  a  long  time  to  run,  we  also  want  to  be  able  to  cancel  a  task.  In  the  Executor framework, tasks that have been submitted but not yet started can always be cancelled, and tasks that have  started can sometimes be cancelled if they are responsive to interruption. Cancelling a task that has already completed  has no effect. 
+
+== Replace Timer with ScheduledThreadPoolExecutor ==
+1. A Timer creates only a single thread for executing timer tasks. If a timer task takes too long to run, the timing accuracy  of other TimerTasks can suffer. If a recurring TimerTask is scheduled to run every 10 ms and another Timer-Task takes  40 ms to run, the recurring task either (depending on whether it was scheduled at fixed rate or fixed delay) gets called  four times in rapid succession after the long running task completes, or "misses" four invocations completely. Scheduled  thread pools address this limitation by letting you provide multiple threads for executing deferred and periodic tasks. 
+
+2. Another problem with Timer is that it behaves poorly if a TimerTask throws an unchecked exception. The Timer thread  doesn't catch the exception, so an unchecked exception thrown from a TimerTask terminates the timer thread. 
+
+== Callable and Future ==
+Interfaces
+{{{java
+public interface Callable<V> {
+    V call() throws Exception;
+}
+public interface Future<V> {
+    boolean cancel(boolean mayInterruptIfRunning);
+    boolean isCancelled();
+    boolean isDone();
+    V get() throws InterruptedException, ExecutionException,
+                   CancellationException;
+    V get(long timeout, TimeUnit unit)
+throws InterruptedException, ExecutionException,
+       CancellationException, TimeoutException;
+}
+}}}
+
+The behavior of **get** varies depending on the task state (not yet started, running, completed). It returns immediately or  throws  an  Exception  if  the  task  has  already  completed,  but  if  not  it  blocks  until  the  task  completes.  If  the  task  completes  by  throwing  an  exception,  get  rethrows  it  wrapped  in  an  ExecutionException;  if  it  was  cancelled,  get  throws CancellationException. If get throws ExecutionException, the underlying exception can be retrieved with  getCause. 
+
+The  submit  methods  in  ExecutorService  all  return  a  Future, so that you can submit a Runnable or a Callable to an executor and get back a Future that can be used to  retrieve the result or cancel the task.
