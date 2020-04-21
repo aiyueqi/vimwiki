@@ -1,3 +1,29 @@
 Chapter 2. Thread Safety
 
+Informally,  an  object's  state  is  its  data,  stored  in  state  variables  such  as  instance  or  static  fields.  An  object's  state  may  include fields from other, dependent objects; a HashMap's state is partially stored in the HashMap object itself, but also in  many Map.Entry objects. An object's state encompasses any data that can affect its externally visible behavior. 
+By  shared,  we  mean  that  a  variable  could  be  accessed  by  multiple  threads;  by  mutable,  we  mean  that  its  value  could  change during its lifetime. We may talk about thread safety as if it were about code, but what we are really trying to do  is protect data from uncontrolled concurrent access. 
+
+If  multiple  threads  access  the  same  mutable  state  variable  without  appropriate  synchronization,  your  program  is  broken. There are three ways to fix it: 
+- Don't share the state variable across threads; 
+- Make the state variable immutable; or 
+- Use synchronization whenever accessing the state variable. 
+
+When  designing  thread safe  classes,  good  object oriented  techniques     encapsulation,  immutability,  and  clear  specification of invariants   are your best friends. 
+
+== Thread-safe definition ==
+A  class  is  thread safe  if  it  behaves  correctly  when  accessed  from  multiple  threads,  regardless  of  the  scheduling  or  interleaving  of  the  execution  of  those  threads  by  the  runtime  environment,  and  with  no  additional  synchronization  or  other coordination on the part of the calling code. 
+
+== key points ==
+- Stateless objects are always thread safe. 
+- To preserve state consistency, update related state variables in a single atomic operation. 
+- For  each  mutable  state  variable  that  may  be  accessed  by  more  than  one  thread,  all  accesses  to  that  variable  must  be  performed with the same lock held. In this case, we say that the variable is guarded by that lock. 
+- Every shared, mutable variable should be guarded by exactly one lock. Make it clear to maintainers which lock that is. 
+- For every invariant that involves more than one variable, all the variables involved in that invariant must be guarded by  the same lock. 
+- There is frequently a tension between simplicity and performance. When implementing a synchronization policy, resist  the temptation to prematurely sacrifice simplicity (potentially compromising safety) for the sake of performance. 
+- Avoid  holding  locks  during  lengthy  computations  or  operations  at  risk  of  not  completing  quickly  such  as  network  or  console I/O. 
+
+=== servlet 单实例，多线程，保证线程安全 ===
+
+== methods to ensure thread safe ==
+A  common  locking  convention  is  to  encapsulate  all  mutable  state  within  an  object  and  to  protect  it  from  concurrent  access by synchronizing any code path that accesses mutable state using the object's intrinsic lock. 
 
