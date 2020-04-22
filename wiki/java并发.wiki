@@ -2,5 +2,7 @@
 == [[volatile特性]] ==
 == [[Executor框架]] ==
 == [[Thread Safety]] ==
+== [[Sharing Objects]] ==
+== [[Composing Objects]] ==
 == [[Task Execution]] ==
 == [[Task Execution2]] ==

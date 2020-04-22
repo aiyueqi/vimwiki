@@ -1,0 +1,145 @@
+= Sharing Objects =
+Sharing Variable without Synchronization. 
+{{{java
+public class NoVisibility {
+    private static boolean ready;
+    private static int number;
+    private static class ReaderThread extends Thread {
+        public void run() {
+            while (!ready)
+                Thread.yield();
+            System.out.println(number);
+        }
+    }
+    public static void main(String[] args) {
+        new ReaderThread().start();
+        number = 42;
+        ready = true;
+    } 
+}
+}}}
+While it may seem obvious that NoVisibility will print 42, it is in fact possible that it will print  zero, or never terminate at all!
+Because it does not use adequate synchronization, there is no guarantee that the values  of ready and number written by the main thread will be visible to the reader thread.
+
+== key points ==
+- Locking is not just about mutual exclusion; it is also about memory visibility. To ensure that all threads see the most up  to date values of shared mutable variables, the reading and writing threads must synchronize on a common lock. 
+- Locking can guarantee both visibility and atomicity; volatile variables can only guarantee visibility.  
+
+== Volatile ==
+这里有问题，深入理解jvm书中说volatile变量会缓存，只是保证其他工作线程读取此变量时，会刷新到主内存，然后读到最新值
+
+However, we do not recommend relying too heavily on volatile variables for visibility; code that  relies  on  volatile  variables  for  visibility  of  arbitrary  state  is  more  fragile  and  harder  to  understand  than  code  that  uses  locking. 
+Volatile  variables  are  not  cached  in  registers  or  in  caches  where  they  are  hidden  from  other  processors, so a read of a volatile variable always returns the most recent write by any thread. 
+
+You can use volatile variables only when all the following criteria are met: 
+- Writes  to  the  variable  do  not  depend  on  its  current  value,  or  you  can  ensure  that  only  a  single  thread  ever  updates the value; 
+- The variable does not participate in invariants with other state variables; and 
+- Locking is not required for any other reason while the variable is being accessed. 
+- Do not allow the this reference to escape during construction. 
+- Just as it is a good practice to make all fields private unless they need greater visibility [EJ Item 12], it is a good practice  to make all fields final unless they need to be mutable. 
+
+== Publication and Escape ==
+Publishing an Object
+{{{java
+public static Set<Secret> knownSecrets;
+public void initialize() {
+    knownSecrets = new HashSet<Secret>();
+}
+}}}
+
+Allowing Internal Mutable State to Escape. Don't Do this. 
+{{{java
+class UnsafeStates {
+    private String[] states = new String[] {
+        "AK", "AL" ...
+    };
+    public String[] getStates() { return states; }
+}
+}}}
+
+Implicitly Allowing the this Reference to Escape. Don't Do this. 
+When  ThisEscape  publishes  the  EventListener,  it  implicitly  publishes  the  enclosing  ThisEscape  instance  as  well,  because  inner  class  instances  contain  a  hidden  reference  to  the  enclosing  instance. 
+{{{java
+public class ThisEscape {
+    public ThisEscape(EventSource source) {
+        source.registerListener(
+            new EventListener() {
+                public void onEvent(Event e) {
+                    doSomething(e);
+                }
+            }
+        );
+    } 
+}
+}}}
+
+== Stack Confinement ==
+There is no way to obtain a reference to a primitive variable
+
+== ThreadLocal ==
+Like global variables, thread local variables can detract from reusability  and introduce hidden couplings among classes, and should therefore be used with care. 
+
+== Immutability ==
+An object is immutable if: 
+- Its state cannot be modified after construction; 
+- All its fields are final;[12] and 
+- It is properly constructed (the this reference does not escape during construction). 
+
+== Immutable Holder for Caching a Number and its Factors. == 
+{{{java
+@Immutable
+class OneValueCache {
+    private final BigInteger lastNumber;
+    private final BigInteger[] lastFactors;
+    public OneValueCache(BigInteger i, BigInteger[] factors) {
+        lastNumber  = i;
+        lastFactors = Arrays.copyOf(factors, factors.length);
+    }
+    public BigInteger[] getFactors(BigInteger i) {
+        if (lastNumber == null || !lastNumber.equals(i))
+            return null;
+        else
+            return Arrays.copyOf(lastFactors, lastFactors.length);
+    } 
+}
+}}}
+
+== Caching the Last Result Using a Volatile Reference to an Immutable Holder Object. == 
+{{{java
+@ThreadSafe
+public class VolatileCachedFactorizer implements Servlet {
+    private volatile OneValueCache cache = new OneValueCache(null, null);
+    
+    public void service(ServletRequest req, ServletResponse resp) {
+        BigInteger i = extractFromRequest(req);
+        BigInteger[] factors = cache.getFactors(i);
+        if (factors == null) {
+            factors = factor(i);
+            cache = new OneValueCache(i, factors);
+        }
+        encodeIntoResponse(resp, factors);
+    }
+}
+}}}
+
+== Safe Publication Idioms ==
+To  publish  an  object  safely,  both  the  reference  to  the  object  and  the  object's  state  must  be  made  visible  to  other  threads at the same time. A properly constructed object can be safely published by: 
+- Initializing an object reference from a static initializer; 
+- Storing a reference to it into a volatile field or AtomicReference; 
+- Storing a reference to it into a final field of a properly constructed object; or
+- Storing a reference to it into a field that is properly guarded by a lock. 
+
+== Effectively Immutable Objects == 
+- Safely published effectively immutable objects can be used safely by any thread without additional synchronization. 
+
+== Mutable Objects ==
+The publication requirements for an object depend on its mutability: 
+- Immutable objects can be published through any mechanism; 
+- Effectively immutable objects must be safely published; 
+- Mutable objects must be safely published, and must be either thread safe or guarded by a lock. 
+
+== Sharing Objects Safely == 
+The most useful policies for using and sharing objects in a concurrent program are:  Thread confined. A thread confined object is owned exclusively by and confined to one thread, and can be modified by  its owning thread. 
+Shared  read only.  A  shared  read only  object  can  be  accessed  concurrently  by  multiple  threads  without  additional  synchronization,  but  cannot  be  modified  by  any  thread.  Shared  read only  objects  include  immutable  and  effectively  immutable objects. 
+Shared  thread safe.  A  thread safe  object  performs  synchronization  internally,  so  multiple  threads  can  freely  access  it  through its public interface without further synchronization. 
+Guarded.  A  guarded  object  can  be  accessed  only  with  a  specific  lock  held.  Guarded  objects  include  those  that  are  encapsulated within other thread safe objects and published objects that are known to be guarded by a specific lock. 

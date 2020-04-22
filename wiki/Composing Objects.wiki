@@ -1,0 +1,5 @@
+= Composing Objects =
+The design process for a thread safe class should include these three basic elements:
+- Identify the variables that form the object's state; 
+- Identify the invariants that constrain the state variables; 
+- Establish a policy for managing concurrent access to the object's state. 
