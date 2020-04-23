@@ -3,3 +3,5 @@ The design process for a thread safe class should include these three basic elem
 - Identify the variables that form the object's state; 
 - Identify the invariants that constrain the state variables; 
 - Establish a policy for managing concurrent access to the object's state. 
+
+Where  practical,  delegation  is  one  of  the  most  effective  strategies  for  creating  thread safe  classes: just let existing thread safe classes manage all the state.

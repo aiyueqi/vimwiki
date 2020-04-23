@@ -1,0 +1,35 @@
+= Building Blocks =
+== synchronized Collections ==
+The  synchronized  collection  classes  include  Vector  and  Hashtable,
+These classes achieve thread safety by encapsulating their state and synchronizing every public method so that only one  thread at a time can access the collection state. 
+
+== the reason why change Iterator synchronized to throw Exception ==
+There  are  several  reasons,  however,  why  locking  a  collection  during  iteration  may  be  undesirable.  Other  threads  that  need to access the collection will block until the iteration is complete; if the collection is large or the task performed for  each  element  is  lengthy,  they  could  wait  a  long  time.  Also,  if  the  collection  is  locked  as  in  Listing  5.4,  doSomething  is  being  called  with  a  lock  held,  which  is  a  risk  factor  for  deadlock  (see  Chapter  10).  Even  in  the  absence  of  starvation  or  deadlock risk, locking collections for significant periods of time hurts application scalability. The longer a lock is held, the  more likely it is to be contended, and if many threads are blocked waiting for a lock throughput and CPU utilization can  suffer (see Chapter 11). 
+An alternative to locking the collection during iteration is to clone the collection and iterate the copy instead. Since the  clone  is  thread confined,  no  other  thread  can  modify  it  during  iteration,  eliminating  the  possibility  of  ConcurrentModificationException. (The collection still must be locked during the clone operation itself.) Cloning the  collection has an obvious performance cost; whether this is a favorable tradeoff depends on many factors including the  size  of  the  collection,  how  much  work  is  done  for  each  element,  the  relative  frequency  of  iteration  compared  to  other  collection operations, and responsiveness and throughput requirements. 
+
+== Hidden Iterators ==
+While locking can prevent iterators from throwing ConcurrentModificationException, you have to remember to use  locking  everywhere  a  shared  collection  might  be  iterated.  This  is  trickier  than  it  sounds,  as  iterators  are  sometimes  hidden,  as  in  HiddenIterator
+
+== key points ==
+- Just as encapsulating an object's state makes it easier to preserve its invariants, encapsulating its synchronization makes  it easier to enforce its synchronization policy. 
+ 
+== Blocking Queues and the Producer consumer Pattern == 
+== Deques and Work Stealing ==
+Just  as  blocking  queues  lend  themselves  to  the  producer consumer  pattern,  deques  lend  themselves  to  a  related  pattern  called  work  stealing.  A  producer consumer  design  has  one  shared  work  queue  for  all  consumers;  in  a  work  stealing design, every consumer has its own deque. If a consumer exhausts the work in its own deque, it can steal work  from the tail of someone else's deque. Work stealing can be more scalable than a traditional producer consumer design  because workers don't contend for a shared work queue; most of the time they access only their own deque, reducing  contention.  When  a  worker  has  to  access  another's  queue,  it  does  so  from  the  tail  rather  than  the  head,  further  reducing contention. 
+
+Restoring the Interrupted Status so as Not to Swallow the Interrupt. 
+{{{java
+public class TaskRunnable implements Runnable {
+    BlockingQueue<Task> queue;
+    ...
+    public void run() {
+        try {
+            processTask(queue.take());
+        } catch (InterruptedException e) {
+             // restore interrupted status
+             Thread.currentThread().interrupt();
+} }
+}
+}}}
+
+TODO 信号量不建议和条件队列放到一起？
